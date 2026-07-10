@@ -1,80 +1,80 @@
-# Praca Inżynierska: Badanie narzutu wydajnościowego kryptografii mTLS w środowisku Istio
+# Bachelor's Thesis: Performance Overhead Analysis of mTLS Cryptography in Istio Environment
 
-## 1. Struktura repozytorium
+## 1. Repository Structure
 
-Wszystkie skrypty i wyniki są zorganizowane w następujący sposób:
+All scripts and results are organized as follows:
 
-* `1_skrypty/` - Skrypty bash automatyzujące stawianie klastra (k3d) i instalację narzędzi (Istio, Prometheus, Grafana).
-* `2_yaml_mainfest/` - Konfiguracje Kubernetes/Istio (np. wymuszanie wersji TLS, polityki autoryzacji).
-* `3_wyniki/` - Wyeksportowane raporty z narzędzia K6 (pliki JSON).
-* `4_testy_js/` - Skrypty testowe dla narzędzia K6 (scenariusze obciążeniowe).
+* `01_scripts/` - Bash scripts automating cluster setup (k3d) and tool installation (Istio, Prometheus, Grafana).
+* `02_manifests/` - Kubernetes/Istio configurations (e.g., forcing TLS versions, authorization policies).
+* `04_results/` - Exported reports from the K6 tool (JSON files).
+* `03_test_scripts/` - Test scripts for the K6 tool (load scenarios).
 
-## 2. Instrukcja odtworzenia środowiska badawczego
+## 2. Instructions for Recreating the Research Environment
 
-Aby powtórzyć badania od zera, należy:
+To repeat the research from scratch:
 
-1. Upewnić się, że uruchomiony jest Docker Desktop.
-2. Otworzyć terminal (Git Bash).
-3. Uruchomić skrypt startowy:
+1. Ensure Docker Desktop is running.
+2. Open a terminal (e.g., Git Bash).
+3. Run the startup script:
 
    ```bash
-   ./1_skrypty/setup_cluster.sh
+   ./01_scripts/setup_cluster.sh
    ```
 
-4. Zapisać nazwę wygenerowanego Poda K6 do zmiennej:
+4. Save the generated K6 pod name to a variable:
 
    ```bash
    K6_POD=$(kubectl get pods -l app=k6 -o jsonpath="{.items[0].metadata.name}")
    ```
 
-## 3. Dziennik pomiarów i testów
+## 3. Measurement and Test Log
 
-### Etap 1: Środowisko bazowe (Domyślny mTLS 1.3)
+### Phase 1: Baseline Environment (Default mTLS 1.3)
 
-**Cel:** Zmierzenie czystego narzutu klastra dla domyślnej, najsilniejszej konfiguracji kryptograficznej (AES-GCM).
+**Goal:** Measure the clean cluster overhead for the default, strongest cryptographic configuration (AES-GCM).
 
-* **Test lekki** (Dużo zapytań, mały payload):
-  * Skrypt: `4_testy_js/test_lekki.js` (500 QPS / 30s)
-  * Wynik: `3_wyniki/podsumowanie_lekki_mtls13.json`
-* **Test ciężki** (Mniej zapytań, duży payload 50 KB):
-  * Skrypt: `4_testy_js/test_ciezki.js` (200 QPS / 60s)
-  * Wynik: `3_wyniki/podsumowanie_ciezki_mtls13.json`
+* **Light test** (High QPS, small payload):
+  * Script: `03_test_scripts/Archive/light_test.js` (500 QPS / 30s)
+  * Result: `04_results/Archive/summary_light_mtls1_3.json`
+* **Heavy test** (Lower QPS, large 50 KB payload):
+  * Script: `03_test_scripts/Archive/heavy_test.js` (200 QPS / 60s)
+  * Result: `04_results/Archive/summary_heavy_mtls1_3.json`
 
-### Etap 2: Odporność na manipulację (Próba wymuszenia TLS 1.2 i słabych szyfrów)
+### Phase 2: Resistance to Tampering (Attempt to Force TLS 1.2 and Weak Ciphers)
 
-**Cel:** Zbadanie zachowania klastra przy próbie obniżenia standardów kryptograficznych (tzw. downgrade attack) poprzez wymuszenie protokołu TLS 1.2 oraz przestarzałego szyfru.
+**Goal:** Investigate cluster behavior when attempting to downgrade cryptographic standards (downgrade attack) by forcing TLS 1.2 and an obsolete cipher.
 
-#### Próba 1: Użycie standardowego API Istio (Nieudana)
+#### Attempt 1: Using the Standard Istio API (Unsuccessful)
 
-W pierwszej kolejności podjęto próbę rekonfiguracji za pomocą standardowego zasobu `DestinationRule`.
+First, a reconfiguration attempt was made using the standard `DestinationRule` resource.
 
-**Zastosowany manifest YAML:**
-`2_yaml_manifest\wymuszenie_mtls12.yaml`
+**Applied YAML manifest:**
+`02_manifests/force_mtls_1_2.yaml`
 
-##### Wiadomość błędu
+##### Error Message
 
 ```bash
-$ kubectl apply -f 2_yaml_mainfest/wymuszenie_mtls12.yaml
+$ kubectl apply -f 02_manifests/force_mtls_1_2.yaml
 peerauthentication.security.istio.io/strict-mtls created
-Error from server (BadRequest): error when creating "2_yaml_mainfest/wymuszenie_mtls12.yaml": DestinationRule in version "v1alpha3" cannot be handled as a DestinationRule: strict decoding error: unknown field "spec.trafficPolicy.tls.cipherSuites", unknown field "spec.trafficPolicy.tls.maxProtocolVersion", unknown field "spec.trafficPolicy.tls.minProtocolVersion"
+Error from server (BadRequest): error when creating "02_manifests/force_mtls_1_2.yaml": DestinationRule in version "v1alpha3" cannot be handled as a DestinationRule: strict decoding error: unknown field "spec.trafficPolicy.tls.cipherSuites", unknown field "spec.trafficPolicy.tls.maxProtocolVersion", unknown field "spec.trafficPolicy.tls.minProtocolVersion"
 ```
 
-**Wniosek z Próby 1:** Powyższy błąd jest dowodem na wbudowaną odporność warstwy *control plane* Istio (Istiod) na błędy konfiguracyjne obniżające bezpieczeństwo. Zespół rozwijający Istio celowo zablokował możliwość swobodnej edycji pół `cipherSuites` oraz `ProtocolVersion` w standardowym API na poziomie `DestinationRule`, aby zapobiec przypadkowemu lub celowemu osłabieniu szyfrowania w Service Meshu.
+**Conclusion from Attempt 1:** The above error is proof of the built-in resilience of the Istio control plane (Istiod) to configuration errors that lower security. The Istio development team intentionally blocked the ability to freely edit the `cipherSuites` and `ProtocolVersion` fields in the standard `DestinationRule` API to prevent accidental or deliberate weakening of encryption in the Service Mesh.
 
-#### Próba 2: Bezpośrednie wstrzyknięcie konfiguracji do proxy (EnvoyFilter)
+#### Attempt 2: Direct Injection of Configuration into the Proxy (EnvoyFilter)
 
-W związku z brakiem możliwości edycji szyfrów przez wysokopoziomowe API Istio, podjęto decyzję o użyciu zasobu `EnvoyFilter`. Pozwala on na bezpośrednią ingerencję w natywną konfigurację (tzw. *config patches*) serwerów proxy Envoy działających jako side-cary, omijając restrykcje walidacyjne API Istio.
+Due to the inability to edit ciphers via the high-level Istio API, a decision was made to use the `EnvoyFilter` resource. This allows direct intervention in the native configuration (config patches) of Envoy proxy servers operating as sidecars, bypassing the validation restrictions of the Istio API.
 
-**Zastosowany manifest YAML (wymuszający TLS 1.2 i słaby szyfr AES128-SHA na serwerze):**
-`2_yaml_manifest\envoyfilter_downgrade_mtls12.yaml`
+**Applied YAML manifest (forcing TLS 1.2 and a weak AES128-SHA cipher on the server):**
+`02_manifests/envoyfilter_downgrade_mtls_1_2.yaml`
 
-**Wynik testu dla Próby 2:** Test narzędziem K6 (skrypt lekki) zakończył się 100% wskaźnikiem sukcesu (`status is 200`) oraz opóźnieniem rzędu 1.65ms. Oznacza to, że atak się nie powiódł, a system nie obniżył standardu bezpieczeństwa.
-Plik z wynikiem: `3_wyniki/podsumowanie_lekki_tls12_odrzucone.json`
+**Test Result for Attempt 2:** The K6 test (light script) finished with a 100% success rate (`status is 200`) and latency of about 1.65ms. This means the attack was unsuccessful, and the system did not lower the security standard.
+Result file: `04_results/Archive/summary_light_tls1_2_rejected.json`
 
-**Weryfikacja za pomocą istioctl:**
-Aby zrozumieć, dlaczego EnvoyFilter nie zadziałał, wykonano zrzut konfiguracji nasłuchującej (listeners) z serwera `httpbin`:
+**Verification using istioctl:**
+To understand why the EnvoyFilter did not work, a listener configuration dump was performed on the `httpbin` server:
 `istioctl proxy-config listeners $HTTPBIN_POD --port 15006 -o json | grep "tls_maximum_protocol_version"`
-Wynik komendy był pusty.
+The command output was empty.
 
 ```
 kacpe@ViBookS14 MINGW64 ~/Documents/Ważne/Projekty/Praca-In-ynierska (main)
@@ -84,24 +84,24 @@ kacpe@ViBookS14 MINGW64 ~/Documents/Ważne/Projekty/Praca-In-ynierska (main)
 $ 
 ```
 
-**Wniosek z Próby 2:** Wewnętrzne mechanizmy bezpieczeństwa Istio chronią porty wejściowe i po cichu odrzucają łatki konfiguracyjne obniżające bezpieczeństwo.
+**Conclusion from Attempt 2:** Istio's internal security mechanisms protect inbound ports and silently reject configuration patches that lower security.
 
-#### Próba 3: Zmiana wektora ataku - nałożenie restrykcji na Klienta (K6)
+#### Attempt 3: Changing the Attack Vector - Applying Restrictions to the Client (K6)
 
-Zdecydowano się zablokować klientowi możliwość korzystania z silnej kryptografii na ruchu wychodzącym (`SIDECAR_OUTBOUND`).
+It was decided to block the client from using strong cryptography for outbound traffic (`SIDECAR_OUTBOUND`).
 
-**Zastosowany manifest YAML:**
-`2_yaml_mainfest/zhakowany_klient_k6.yaml`
+**Applied YAML manifest:**
+`02_manifests/change_client_mtls1_2.yaml`
 
 ```
 kacpe@ViBookS14 MINGW64 ~/Documents/Ważne/Projekty/Praca-In-ynierska (main)
-$ kubectl apply -f 2_yaml_mainfest/zmiena_klient_mtls12.yaml 
+$ kubectl apply -f 02_manifests/change_client_mtls1_2.yaml 
 Warning: EnvoyFilter exposes internal implementation details that may change at any time. Prefer other APIs if possible, and exercise extreme caution, especially around upgrades.
 envoyfilter.networking.istio.io/hack-k6-client created
 ```
 
-**Wynik testu dla Próby 3:**
-Test zakończył się całkowitym niepowodzeniem (0% statusów 200 OK, 100% zapytań zakończonych błędem).
+**Test Result for Attempt 3:**
+The test was a complete failure (0% 200 OK status, 100% of requests failed).
 
 ```text
   █ TOTAL RESULTS
@@ -111,94 +111,94 @@ Test zakończył się całkowitym niepowodzeniem (0% statusów 200 OK, 100% zapy
     ✗ status is 200
 ```
 
-*(Plik z wynikiem: `3_wyniki/podsumowanie_lekki_zhakowany_klient.json`)*
+*(Result file: `04_results/Archive/summary_light_hacked_client.json`)*
 
-**Wniosek końcowy z Etapu 2:**
-Atak polegający na wymuszeniu słabszej kryptografii (downgrade do TLS 1.2 i szyfru AES128-SHA) na kliencie zakończył się niepowodzeniem połączenia z serwerem.
-Eksperyment udowodnił, że side-cary Envoya w architekturze Istio wykazują bardzo wysoką odporność na manipulację konfiguracją kryptograficzną. Domyślne certyfikaty i mechanizmy weryfikacji tożsamości (SPIFFE) skutecznie odrzucają połączenia od klientów, którzy próbują użyć nieautoryzowanych, słabszych algorytmów szyfrujących.
+**Final Conclusion from Phase 2:**
+The attack based on forcing weaker cryptography (downgrade to TLS 1.2 and AES128-SHA cipher) on the client resulted in a connection failure with the server.
+The experiment proved that Envoy sidecars in the Istio architecture exhibit very high resistance to cryptographic configuration tampering. Default certificates and identity verification mechanisms (SPIFFE) effectively reject connections from clients attempting to use unauthorized, weaker encryption algorithms.
 
-### Etap 3: Scenariusz Edge/IoT – Wymuszenie TLS 1.2 na poziomie klastra
+### Phase 3: Edge/IoT Scenario – Forcing TLS 1.2 at Cluster Level
 
-**Cel:** Legalne obniżenie standardu kryptograficznego klastra do TLS 1.2 (z użyciem EnvoyFilter blokującego negocjację w górę) i zbadanie wpływu tego zabiegu na wydajność sieciową (Latency).
+**Goal:** Legally lower the cluster's cryptographic standard to TLS 1.2 (using an EnvoyFilter blocking upward negotiation) and study the impact of this procedure on network performance (Latency).
 
-**Wynik Testu Lekkiego (K6):**
+**Light Test Result (K6):**
 
-* Liczba zapytań: 15000 (100% status 200 OK)
-* Opóźnienie średnie (`avg`): **1.75 ms**
-* Opóźnienie 90. percentyla (`p90`): **2.25 ms**
-*(Plik z podsumowaniem: `3_wyniki/podsumowanie_scenariusz3_prawdziwy.json`)*
-*(Dowód konfiguracji proxy: `dowod_tls.json` z parametrem `"tlsMaximumProtocolVersion": "TLSV1_2"`)*
+* Number of requests: 15000 (100% status 200 OK)
+* Average latency (`avg`): **1.75 ms**
+* 90th percentile latency (`p90`): **2.25 ms**
+*(Summary file: `04_results/Archive/summary_scenario3_real.json`)*
+*(Proxy configuration proof: `tls_proof.json` with parameter `"tlsMaximumProtocolVersion": "TLSV1_2"`)*
 
-**Wnioski:**
-Zgodnie z początkowymi założeniami z "Planu Działania", wymuszenie przestarzałego standardu TLS 1.2 **zwiększyło** średnie opóźnienie sieciowe (z 1.65 ms na 1.75 ms, co stanowi wzrost o około 6%).
-Ten wzrost jest bezpośrednim wynikiem różnic architektonicznych protokołów – TLS 1.2 wymaga pełnych dwóch rund negocjacji (2-RTT) do nawiązania bezpiecznego połączenia, podczas gdy zoptymalizowany TLS 1.3 załatwia to w jednym kroku (1-RTT). Potwierdza to hipotezę, że w zastosowaniach IoT, gdzie sieć może być niestabilna, TLS 1.2 powoduje zauważalny narzut czasowy.
+**Conclusions:**
+In accordance with the initial assumptions from the "Action Plan", forcing the legacy TLS 1.2 standard increased the average network latency (from 1.65 ms to 1.75 ms, which is a growth of about 6%).
+This increase is a direct result of protocol architectural differences – TLS 1.2 requires two full round trips (2-RTT) to establish a secure connection, whereas optimized TLS 1.3 does it in a single step (1-RTT). This confirms the hypothesis that in IoT applications, where the network can be unstable, TLS 1.2 causes a noticeable time overhead.
 
 ```
 kacpe@ViBookS14 MINGW64 ~/Documents/Ważne/Projekty/Praca-In-ynierska (main)
 $ HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}")
 
 kacpe@ViBookS14 MINGW64 ~/Documents/Ważne/Projekty/Praca-In-ynierska (main)
-$ for i in {1..25}; do echo "Pomiary CPU:"; kubectl top pod $HTTPBIN_POD --containers | grep istio-proxy; sleep 3; done
-Pomiary CPU:
+$ for i in {1..25}; do echo "CPU Measurements:"; kubectl top pod $HTTPBIN_POD --containers | grep istio-proxy; sleep 3; done
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   7m           33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   7m           33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   7m           33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   7m           33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   7m           33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   7m           33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   7m           33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   76m          33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   76m          33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   76m          33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   76m          33Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   162m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   162m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   162m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   162m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   162m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   160m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   160m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   160m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   160m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   160m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   158m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   158m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   158m         34Mi
-Pomiary CPU:
+CPU Measurements:
 httpbin-7b549f7859-5rxw9   istio-proxy   158m         34Mi
 
 kacpe@ViBookS14 MINGW64 ~/Documents/Ważne/Projekty/Praca-In-ynierska (main)
 ```
 
-### Podsumowanie Etapu 2 i 3: Analiza wydajnościowa TLS 1.2 vs 1.3
+### Summary of Phase 2 and 3: Performance Analysis of TLS 1.2 vs 1.3
 
-Wykonano testy porównawcze przy użyciu dużego ładunku danych (50 KB payload). Wyniki pomiarów zużycia zasobów przez kontener `istio-proxy` wykazały:
+Comparative tests were performed using a large data payload (50 KB payload). The resource consumption measurements of the `istio-proxy` container showed:
 
-* **TLS 1.3 (Baseline):** Szczytowe zużycie CPU na poziomie **158m**, stabilizacja przy **149m**.
-* **TLS 1.2 (IoT Downgrade):** Szczytowe zużycie CPU na poziomie **162m**, stabilizacja przy **158m**.
+* **TLS 1.3 (Baseline):** Peak CPU consumption at **158m**, stabilization at **149m**.
+* **TLS 1.2 (IoT Downgrade):** Peak CPU consumption at **162m**, stabilization at **158m**.
 
-**Wnioski badawcze:**
-Wbrew wstępnej hipotezie, nowocześniejszy protokół TLS 1.3 okazał się bardziej efektywny procesorowo (o ok. 5.7% mniejsze zużycie CPU przy stabilnym ruchu). Potwierdza to wysoką optymalizację stosu kryptograficznego w nowoczesnych wersjach Envoya oraz korzyści płynące ze skróconego mechanizmu uzgadniania kluczy (Handshake). TLS 1.2 wykazał natomiast nieznacznie mniejsze zapotrzebowanie na pamięć RAM (~10% różnicy).
+**Research Conclusions:**
+Contrary to the initial hypothesis, the more modern TLS 1.3 protocol proved to be more CPU-efficient (approx. 5.7% lower CPU usage during stable traffic). This confirms the high optimization of the cryptographic stack in modern versions of Envoy and the benefits of the shortened key negotiation handshake mechanism. On the other hand, TLS 1.2 showed slightly lower RAM memory demand (~10% difference).

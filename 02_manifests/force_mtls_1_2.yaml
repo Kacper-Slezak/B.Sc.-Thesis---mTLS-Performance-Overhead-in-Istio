@@ -1,0 +1,23 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: strict-mtls
+  namespace: default
+spec:
+  mtls:
+    mode: STRICT
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: force-weak-tls12
+  namespace: default
+spec:
+  host: "*.default.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+      minProtocolVersion: TLSV1_2
+      maxProtocolVersion: TLSV1_2
+      cipherSuites:
+      - ECDHE-RSA-AES128-SHA

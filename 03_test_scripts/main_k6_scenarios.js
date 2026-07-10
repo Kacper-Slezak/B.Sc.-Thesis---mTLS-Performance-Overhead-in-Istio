@@ -1,54 +1,65 @@
 import http from 'k6/http';
-import { check, sleep } from 'k6';
-import { Trend, Counter } from 'k6/metrics';
+import { check } from 'k6';
+import { Trend, Rate } from 'k6/metrics';
 
-const handshakeTime = new Trend('tls_handshake_duration');
+// We measure precisely the response time from the upstream itself (Istio Overhead)
+const upstream_latency = new Trend('upstream_latency_ms');
+const success_rate = new Rate('success_rate');
 
-const profiles = {
-    '1_IoT_Base':      { vus: 10,  duration: '30s', payloadSize: 100,   keepAlive: true },
-    '2_IoT_Scale':     { vus: 100, duration: '30s', payloadSize: 100,   keepAlive: true },
-    '3_Bulk_Transfer': { vus: 10,  duration: '30s', payloadSize: 50000, keepAlive: true },
-    '4_Bulk_Scale':    { vus: 100, duration: '30s', payloadSize: 50000, keepAlive: true },
-    '5_Handshake_Base':{ vus: 10,  duration: '30s', payloadSize: 100,   keepAlive: false },
-    '6_PQC_Stress':    { vus: 100, duration: '30s', payloadSize: 100,   keepAlive: false }
+// Configuration via environment variables
+const cfg = {
+  rate: Number(__ENV.RPS || 500),
+  duration: __ENV.DURATION || '30s',
+  // Port 8000 added
+  targetUrl: __ENV.TARGET_URL || 'http://httpbin.default.svc.cluster.local:8000/get', 
 };
 
-const profileName = __ENV.TEST_PROFILE || '1_IoT_Base';
-const config = profiles[profileName];
-
-const payload = 'A'.repeat(config.payloadSize);
-
 export const options = {
-    vus: config.vus,
-    duration: config.duration,
-    noConnectionReuse: !config.keepAlive, 
-    tags: {
-        test_profile: profileName
-    }
+  scenarios: {
+    perf_test: {
+      executor: 'constant-arrival-rate',
+      rate: cfg.rate,
+      timeUnit: '1s',
+      duration: cfg.duration,
+      preAllocatedVUs: 20,
+      maxVUs: 200,
+    },
+  },
 };
 
 export default function () {
-    const url = 'http://httpbin.default.svc.cluster.local/post';
-    
-    const params = {
-        headers: {
-            'Content-Type': 'text/plain',
-        },
-    };
+  const params = {
+    headers: { 'Content-Type': 'application/json' },
+  };
 
-    if (!config.keepAlive) {
-        params.headers['Connection'] = 'close';
-    }
+  // Changed http.post to http.get for /get endpoint
+  const response = http.get(cfg.targetUrl, params);
 
-    const res = http.post(url, payload, params);
+  // We measure response time and extract Istio latency from headers
+  const upstreamHeader = response.headers['X-Upstream-Latency-Ms'];
+  if (upstreamHeader) {
+    upstream_latency.add(Number(upstreamHeader));
+  }
 
-    check(res, {
-        'status is 200': (r) => r.status === 200,
-    });
+  success_rate.add(response.status === 200);
 
-    if (res.timings.tls_handshaking > 0) {
-        handshakeTime.add(res.timings.tls_handshaking);
-    }
+  check(response, {
+    'status is 200': (r) => r.status === 200,
+  });
+}
 
-    sleep(0.01); 
+export function handleSummary(data) {
+  return {
+    stdout: `
+--- DIPLOMA PERFORMANCE SUMMARY ---
+Test Duration: ${cfg.duration}
+Target Rate:   ${cfg.rate} req/s
+Success Rate:  ${(data.metrics.success_rate?.values?.rate * 100 || 0).toFixed(2)}%
+Avg Latency:   ${(data.metrics.http_req_duration?.values?.avg || 0).toFixed(2)} ms
+P95 Latency:   ${(data.metrics.http_req_duration?.values?.['p(95)'] || 0).toFixed(2)} ms
+Upstream Avg:  ${(data.metrics.upstream_latency_ms?.values?.avg || 0).toFixed(2)} ms
+-----------------------------------
+`,
+    '/tmp/summary.json': JSON.stringify(data, null, 2),
+  };
 }
