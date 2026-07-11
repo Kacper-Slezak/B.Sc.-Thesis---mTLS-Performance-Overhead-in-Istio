@@ -1,0 +1,26 @@
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+
+# Python compiled files and caches
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Huge data and logs directories
+04_results/RawLogs/
+04_results/Archive/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
