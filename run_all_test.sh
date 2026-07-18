@@ -59,8 +59,13 @@ run_test_profile() {
   local END_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
   
   echo "Downloading results for ${FILE_PREFIX}..."
-  kubectl cp $K6_POD:/tmp/raw.json ./04_results/RawLogs/raw_${FILE_PREFIX}.json -c k6
-  kubectl cp $K6_POD:/tmp/summary.json ./04_results/Summary/summary_${FILE_PREFIX}.json -c k6
+  # Use gzip streaming via kubectl exec instead of kubectl cp.
+  # This avoids EOF / timeout errors on large files and speeds up downloads dramatically.
+  kubectl exec $K6_POD -c k6 -- gzip -c /tmp/raw.json > ./04_results/RawLogs/raw_${FILE_PREFIX}.json.gz
+  gzip -d ./04_results/RawLogs/raw_${FILE_PREFIX}.json.gz
+  
+  # Stream summary.json to avoid kubectl cp issues
+  kubectl exec $K6_POD -c k6 -- cat /tmp/summary.json > ./04_results/Summary/summary_${FILE_PREFIX}.json
   
   echo "Fetching metrics from Prometheus and generating plots..."
   python3 ./05_analitics/fetch_and_plot.py --start "$START_TIME" --end "$END_TIME" --setup "$SETUP_NAME" --test-type "$TEST_TYPE" --prefix "$FILE_PREFIX" || echo "Warning: Failed to fetch metrics or plot them."
