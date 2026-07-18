@@ -9,33 +9,51 @@ const targetUrl = __ENV.TARGET_URL || 'http://httpbin.default.svc.cluster.local:
 const testType = __ENV.TEST_TYPE || 'baseline';
 const disableKeepAlive = __ENV.DISABLE_KEEP_ALIVE === 'true';
 
+// Generate 100KB payload for bulk encryption testing
 const heavyPayload = "A".repeat(1024 * 100);
 
 export const options = {
-  // Wyłączamy Keep-Alive po stronie k6 -> lokalny Envoy
   noConnectionReuse: disableKeepAlive,
   scenarios: {
     perf_test: {
-      executor: 'ramping-vus',
-      startVUs: 10,
-      stages: [
-        { duration: '30s', target: testType === 'stress' ? 500 : 100 }, // Rozgrzewka
-        { duration: '2m', target: testType === 'stress' ? 500 : 100 },  // Główne uderzenie
-        { duration: '30s', target: 0 },                                 // Wygaszanie
-      ],
+      executor: testType === 'stress' ? 'ramping-arrival-rate' : 'constant-arrival-rate',
+      timeUnit: '1s',
+      preAllocatedVUs: 20,
+      maxVUs: testType === 'stress' ? 500 : 200,
+      ...(testType === 'stress' 
+        ? {
+            // Options specific to ramping-arrival-rate
+            startRate: 50,
+            stages: [
+              { target: 1500, duration: '3m' }
+            ]
+          }
+        : {
+            // Options specific to constant-arrival-rate
+            rate: testType === 'payload' ? 100 : 500,
+            duration: '3m'
+          }
+      )
     },
   },
 };
 
 export default function () {
-  const headers = disableKeepAlive ? { 'Connection': 'close' } : {};
   let response;
+  const headers = {};
+  if (disableKeepAlive) {
+    headers['Connection'] = 'close';
+  }
 
   if (testType === 'payload') {
     headers['Content-Type'] = 'application/json';
-    response = http.post(`${targetUrl}/post`, JSON.stringify({ data: heavyPayload }), { headers });
+    response = http.post(`${targetUrl}/post`, JSON.stringify({ data: heavyPayload }), {
+      headers: headers
+    });
   } else {
-    response = http.get(`${targetUrl}/get`, { headers });
+    response = http.get(`${targetUrl}/get`, {
+      headers: headers
+    });
   }
 
   success_rate.add(response.status === 200);

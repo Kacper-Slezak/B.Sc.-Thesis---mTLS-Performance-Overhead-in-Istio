@@ -8,6 +8,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# IMPORTANT: rate()/irate() windows must be at least ~4x your Prometheus
+# scrape_interval, or you get noisy/NaN results because there aren't enough
+# samples inside the window. Check your real scrape interval with:
+#   kubectl -n istio-system get cm prometheus-server -o yaml | grep scrape_interval
+# (or wherever your Prometheus config lives) and adjust this constant.
+SCRAPE_INTERVAL_SECONDS = 15
+RATE_WINDOW = f"{SCRAPE_INTERVAL_SECONDS * 4}s"
+
 # Query Prometheus API for range data
 def query_prometheus_range(query, start_time, end_time, step='2s'):
     params = {
@@ -69,11 +77,11 @@ def main():
 
     # 1. Fetch CPU Usage (millicores)
     # httpbin CPU queries
-    q_httpbin_app_cpu = 'sum(rate(container_cpu_usage_seconds_total{namespace="default", container="httpbin", pod=~"httpbin-.*"}[15s])) * 1000'
-    q_httpbin_proxy_cpu = 'sum(rate(container_cpu_usage_seconds_total{namespace="default", container="istio-proxy", pod=~"httpbin-.*"}[15s])) * 1000'
+    q_httpbin_app_cpu = f'sum(rate(container_cpu_usage_seconds_total{{namespace="default", container="httpbin", pod=~"httpbin-.*"}}[{RATE_WINDOW}])) * 1000'
+    q_httpbin_proxy_cpu = f'sum(rate(container_cpu_usage_seconds_total{{namespace="default", container="istio-proxy", pod=~"httpbin-.*"}}[{RATE_WINDOW}])) * 1000'
     # k6 CPU queries
-    q_k6_app_cpu = 'sum(rate(container_cpu_usage_seconds_total{namespace="default", container="k6", pod=~"k6-deploy-.*"}[15s])) * 1000'
-    q_k6_proxy_cpu = 'sum(rate(container_cpu_usage_seconds_total{namespace="default", container="istio-proxy", pod=~"k6-deploy-.*"}[15s])) * 1000'
+    q_k6_app_cpu = f'sum(rate(container_cpu_usage_seconds_total{{namespace="default", container="k6", pod=~"k6-deploy-.*"}}[{RATE_WINDOW}])) * 1000'
+    q_k6_proxy_cpu = f'sum(rate(container_cpu_usage_seconds_total{{namespace="default", container="istio-proxy", pod=~"k6-deploy-.*"}}[{RATE_WINDOW}])) * 1000'
 
     res_hb_app_cpu = query_prometheus_range(q_httpbin_app_cpu, start_dt, end_dt)
     res_hb_proxy_cpu = query_prometheus_range(q_httpbin_proxy_cpu, start_dt, end_dt)
@@ -109,35 +117,83 @@ def main():
     dfs_mem = [df for df in [df_hb_app_mem, df_hb_proxy_mem, df_k6_app_mem, df_k6_proxy_mem] if not df.empty]
     df_mem = pd.concat(dfs_mem, ignore_index=True) if dfs_mem else pd.DataFrame(columns=['timestamp', 'value', 'container', 'pod', 'label'])
 
+    # 3. Fetch TLS handshake rate (real Envoy metric, NOT k6's http_req_tls_handshaking)
+    # k6 talks plaintext HTTP to its local sidecar; mTLS happens sidecar-to-sidecar
+    # entirely outside k6's visibility, so k6 will ALWAYS report 0 for TLS handshake
+    # timing regardless of cipher/keep-alive settings. That metric was fundamentally
+    # measuring the wrong layer of the stack.
+    #
+    # Envoy exposes handshake COUNT (not duration) as a stat. The exact Prometheus
+    # metric name can vary by Istio/Envoy version and stats config. Verify yours with:
+    #   HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}")
+    #   kubectl exec $HTTPBIN_POD -c istio-proxy -- curl -s localhost:15090/stats/prometheus | grep ssl_handshake
+    # and adjust the query below if the metric name differs.
+    q_httpbin_tls_handshake_rate = f'sum(rate(envoy_listener_ssl_handshake{{namespace="default", pod=~"httpbin-.*"}}[{RATE_WINDOW}]))'
+    res_hb_tls_handshake = query_prometheus_range(q_httpbin_tls_handshake_rate, start_dt, end_dt)
+    df_hb_tls_handshake = result_to_df(res_hb_tls_handshake, 'httpbin-proxy')
+
     # Save fetched metrics to file
     metrics_log_path = f"./04_results/Metrics/metrics_{args.prefix}.json"
     metrics_data = {
         'cpu': df_cpu.to_dict(orient='records') if not df_cpu.empty else [],
-        'memory': df_mem.to_dict(orient='records') if not df_mem.empty else []
+        'memory': df_mem.to_dict(orient='records') if not df_mem.empty else [],
+        'tls_handshake_rate': df_hb_tls_handshake.to_dict(orient='records') if not df_hb_tls_handshake.empty else [],
+        # Real (unpadded) test window, used by compare_results.py to trim out the
+        # +/-15s idle buffer we add below purely for plot context.
+        'window': {'start': args.start, 'end': args.end}
     }
     with open(metrics_log_path, 'w', encoding='utf-8') as f:
         json.dump(metrics_data, f, indent=2, default=str)
     print(f"Saved raw prometheus metrics to {metrics_log_path}")
 
     # 3. Read K6 Latency points
+    # k6's --out json emits ONE JSON line per SAMPLE of EVERY metric (http_reqs,
+    # http_req_duration, iteration_duration, data_sent, ...) -- for a
+    # high-throughput test this can be many millions of lines. A pure-Python
+    # `for line in f: json.loads(line)` loop over that is exactly the kind of
+    # thing that looks "stuck" for many minutes with zero console output.
+    # pandas' line-delimited JSON reader (C-backed) handles the same file in a
+    # small fraction of the time.
     k6_raw_path = f"./04_results/RawLogs/raw_{args.prefix}.json"
-    k6_data_points = []
+    df_k6 = pd.DataFrame()
     if os.path.exists(k6_raw_path):
-        with open(k6_raw_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                if not line.strip():
-                    continue
-                try:
-                    record = json.loads(line)
-                    if record.get('type') == 'Point' and record.get('metric') == 'http_req_duration':
-                        k6_data_points.append({
-                            'timestamp': pd.to_datetime(record['data']['time']),
-                            'duration_ms': record['data']['value']
-                        })
-                except json.JSONDecodeError:
-                    continue
+        try:
+            raw_df = pd.read_json(k6_raw_path, lines=True)
+            raw_df = raw_df[(raw_df['type'] == 'Point') & (raw_df['metric'] == 'http_req_duration')]
+            df_k6 = pd.DataFrame({
+                'timestamp': pd.to_datetime(raw_df['data'].apply(lambda d: d['time'])),
+                'duration_ms': raw_df['data'].apply(lambda d: d['value'])
+            })
+        except Exception as e:
+            print(f"Fast JSON read failed ({e}); falling back to slow line-by-line parse...")
+            k6_data_points = []
+            with open(k6_raw_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    if not line.strip():
+                        continue
+                    try:
+                        record = json.loads(line)
+                        if record.get('type') == 'Point' and record.get('metric') == 'http_req_duration':
+                            k6_data_points.append({
+                                'timestamp': pd.to_datetime(record['data']['time']),
+                                'duration_ms': record['data']['value']
+                            })
+                    except json.JSONDecodeError:
+                        continue
+            df_k6 = pd.DataFrame(k6_data_points) if k6_data_points else pd.DataFrame()
 
-    df_k6 = pd.DataFrame(k6_data_points) if k6_data_points else pd.DataFrame()
+    print(f"Loaded {len(df_k6)} http_req_duration points from k6 raw log.")
+
+    # For plotting only (not for stats): matplotlib scatter + savefig(dpi=300)
+    # on hundreds of thousands/millions of points is itself very slow. Sample
+    # down to a representative subset for the visuals; averages/percentiles
+    # below still use the FULL dataset.
+    MAX_PLOT_POINTS = 20000
+    if len(df_k6) > MAX_PLOT_POINTS:
+        df_k6_plot = df_k6.sample(n=MAX_PLOT_POINTS, random_state=42).sort_values('timestamp')
+        print(f"Downsampled to {MAX_PLOT_POINTS} points for plotting (full data still used for stats).")
+    else:
+        df_k6_plot = df_k6.sort_values('timestamp') if not df_k6.empty else df_k6
 
     # 4. Generate Plot
     sns.set_theme(style="whitegrid")
@@ -149,8 +205,9 @@ def main():
 
     # Panel 1: Latency Over Time
     if not df_k6.empty:
-        sns.scatterplot(data=df_k6, x='timestamp', y='duration_ms', alpha=0.3, ax=axes[0, 0], color='#1f77b4', edgecolor=None)
-        # Add rolling mean to show trends
+        sns.scatterplot(data=df_k6_plot, x='timestamp', y='duration_ms', alpha=0.3, ax=axes[0, 0], color='#1f77b4', edgecolor=None)
+        # Rolling mean computed on the FULL dataset for accuracy (cheap: it's a
+        # single pass, not a per-point render), only the scatter is downsampled.
         df_k6_sorted = df_k6.sort_values('timestamp')
         df_k6_sorted['rolling_mean'] = df_k6_sorted['duration_ms'].rolling(window=100, min_periods=10).mean()
         sns.lineplot(data=df_k6_sorted, x='timestamp', y='rolling_mean', color='darkblue', linewidth=2, label='Rolling Mean (100 req)', ax=axes[0, 0])
@@ -164,8 +221,8 @@ def main():
 
     # Panel 2: Latency Distribution
     if not df_k6.empty:
-        sns.boxplot(y=df_k6['duration_ms'], ax=axes[0, 1], color='#42b9f5', showfliers=True)
-        # Print metrics in the plot
+        sns.boxplot(y=df_k6_plot['duration_ms'], ax=axes[0, 1], color='#42b9f5', showfliers=True)
+        # Print metrics in the plot -- these use the FULL dataset, not the sample
         avg_lat = df_k6['duration_ms'].mean()
         p90_lat = df_k6['duration_ms'].quantile(0.90)
         p95_lat = df_k6['duration_ms'].quantile(0.95)
