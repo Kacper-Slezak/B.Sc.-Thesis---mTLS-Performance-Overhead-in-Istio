@@ -11,6 +11,10 @@ spec:
   - applyTo: FILTER_CHAIN
     match:
       context: SIDECAR_INBOUND
+      listener:
+        filterChain:
+          destinationPort: 8080
+          transportProtocol: tls
     patch:
       operation: MERGE
       value:
@@ -23,10 +27,7 @@ spec:
                 tls_maximum_protocol_version: TLSv1_2
                 tls_minimum_protocol_version: TLSv1_2
                 cipher_suites:
-                # 128-bit key
-                - "ECDHE-RSA-AES128-GCM-SHA256"
                 - "ECDHE-ECDSA-AES128-GCM-SHA256"
-                
-                # OR 256-bit key (heavier)
-                - "ECDHE-RSA-AES256-GCM-SHA384"
+                - "ECDHE-RSA-AES128-GCM-SHA256"
                 - "ECDHE-ECDSA-AES256-GCM-SHA384"
+                - "ECDHE-RSA-AES256-GCM-SHA384"

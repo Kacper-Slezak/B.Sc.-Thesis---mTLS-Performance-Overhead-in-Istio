@@ -7,11 +7,13 @@ const success_rate = new Rate('success_rate');
 
 const targetUrl = __ENV.TARGET_URL || 'http://httpbin.default.svc.cluster.local:8000';
 const testType = __ENV.TEST_TYPE || 'baseline';
+const disableKeepAlive = __ENV.DISABLE_KEEP_ALIVE === 'true';
 
 // Generate 100KB payload for bulk encryption testing
 const heavyPayload = "A".repeat(1024 * 100);
 
 export const options = {
+  noConnectionReuse: disableKeepAlive,
   scenarios: {
     perf_test: {
       executor: testType === 'stress' ? 'ramping-arrival-rate' : 'constant-arrival-rate',
@@ -23,13 +25,13 @@ export const options = {
             // Options specific to ramping-arrival-rate
             startRate: 50,
             stages: [
-              { target: 1500, duration: '1m' }
+              { target: 1500, duration: '3m' }
             ]
           }
         : {
             // Options specific to constant-arrival-rate
             rate: testType === 'payload' ? 100 : 500,
-            duration: '30s'
+            duration: '3m'
           }
       )
     },
@@ -38,13 +40,20 @@ export const options = {
 
 export default function () {
   let response;
+  const headers = {};
+  if (disableKeepAlive) {
+    headers['Connection'] = 'close';
+  }
 
   if (testType === 'payload') {
+    headers['Content-Type'] = 'application/json';
     response = http.post(`${targetUrl}/post`, JSON.stringify({ data: heavyPayload }), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: headers
     });
   } else {
-    response = http.get(`${targetUrl}/get`);
+    response = http.get(`${targetUrl}/get`, {
+      headers: headers
+    });
   }
 
   success_rate.add(response.status === 200);

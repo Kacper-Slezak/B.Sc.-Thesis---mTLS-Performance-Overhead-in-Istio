@@ -33,7 +33,6 @@ Podzieliliśmy testy na dwie osie: **Konfiguracja Infrastruktury** (jaki szyfr i
 
 ### Prometheus i Grafana: Weryfikacja i Zapis Danych
 
-Aby upewnić się, że wszystko działa i zapisać wyniki, musisz wiedzieć, gdzie patrzeć.
 
 1. **Podgląd na żywo w Grafanie:**
 * Uruchom komendę: `kubectl port-forward svc/grafana 3000:3000 -n istio-system`

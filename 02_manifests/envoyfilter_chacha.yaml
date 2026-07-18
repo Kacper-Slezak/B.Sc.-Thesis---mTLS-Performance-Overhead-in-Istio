@@ -11,6 +11,10 @@ spec:
   - applyTo: FILTER_CHAIN
     match:
       context: SIDECAR_INBOUND
+      listener:
+        filterChain:
+          destinationPort: 8080
+          transportProtocol: tls
     patch:
       operation: MERGE
       value:
@@ -23,5 +27,5 @@ spec:
                 tls_maximum_protocol_version: TLSv1_2
                 tls_minimum_protocol_version: TLSv1_2
                 cipher_suites:
-                - "ECDHE-RSA-CHACHA20-POLY1305"
                 - "ECDHE-ECDSA-CHACHA20-POLY1305"
+                - "ECDHE-RSA-CHACHA20-POLY1305"
