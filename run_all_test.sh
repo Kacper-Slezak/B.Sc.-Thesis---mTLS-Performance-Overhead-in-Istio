@@ -52,16 +52,28 @@ GRAFANA_PANEL_IDS=(2 4 6)   # <-- adjust to your dashboard's real panel IDs
 # sidecar's own stats endpoint. This is the real proof-of-cipher, unlike
 # `kubectl get envoyfilter -o yaml`, which only shows the CR was accepted by
 # the API server -- not that the sidecar used it on live connections.
+# Also captures ssl.session_reused: if this counter climbs a lot during the
+# "-nokeepalive" runs, TLS session resumption is skipping the full asymmetric
+# handshake even on fresh connections, which would flatten out any difference
+# vs. the keep-alive scenario regardless of the DestinationRule being applied.
 # Envoy admin stat names/prefixes can vary by version; if the grep below comes
 # back empty, run the curl manually once and adjust the pattern.
 capture_cipher_stats() {
   local SETUP_NAME=$1
   local SUFFIX=$2  # "before" or "after"
   local HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}")
+  
+  echo "Capturing cipher stats for ${SETUP_NAME} (${SUFFIX})..."
+  
+  # Pobieramy statystyki i używamy "|| true", aby skrypt nie wywalił się, gdy grep nic nie znajdzie (np. faza "before")
   kubectl exec "$HTTPBIN_POD" -c istio-proxy -- curl -s localhost:15000/stats \
-    | grep -E '\.ssl\.(ciphers|versions|handshake)\.' \
-    > "./04_results/Summary/cipher_stats_${SETUP_NAME}_${SUFFIX}_${TIMESTAMP}.txt" \
-    || echo "Warning: could not capture cipher stats (${SUFFIX}) for ${SETUP_NAME}."
+    | grep -i "ssl.ciphers" \
+    > "./04_results/Summary/cipher_stats_${SETUP_NAME}_${SUFFIX}_${TIMESTAMP}.txt" || true
+
+  # Wyświetl na ekranie to, co znalazł skrypt (dla podglądu na żywo)
+  echo "--- Found ciphers for ${SETUP_NAME} ---"
+  cat "./04_results/Summary/cipher_stats_${SETUP_NAME}_${SUFFIX}_${TIMESTAMP}.txt" || echo "No ciphers recorded yet."
+  echo "---------------------------------------"
 }
 
 # Function to export Grafana panels as PNGs for a given test window.
@@ -105,11 +117,29 @@ run_test_profile() {
   
   # Capture START_TIME in UTC
   local START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-  
+
+  # dr_nokeepalive.yaml forces the CLIENT-side (source) Envoy to close the
+  # upstream connection after every single request (maxRequestsPerConnection: 1)
+  # and blocks HTTP/2 upgrade. Without this, k6's "Connection: close" header
+  # only affects k6 <-> its OWN sidecar -- the sidecar-to-sidecar mTLS tunnel to
+  # httpbin can still get pooled and reused by Envoy regardless, so the
+  # "nokeepalive" scenario ends up silently identical to the keep-alive one.
+  if [ "$DISABLE_KEEP_ALIVE" = "true" ]; then
+    echo "Applying DestinationRule to force real connection-per-request (no pooling)..."
+    kubectl apply -f ./02_manifests/dr_nokeepalive.yaml
+    echo "Waiting 10s for propagation to the client-side sidecar..."
+    sleep 10
+  fi
+
   cat ./03_test_scripts/main_k6_scenarios.js | kubectl exec -i $K6_POD -c k6 -- k6 run -e TEST_TYPE=${TEST_TYPE} -e DISABLE_KEEP_ALIVE=${DISABLE_KEEP_ALIVE} --out json=/tmp/raw.json -
-  
+
   # Capture END_TIME in UTC
   local END_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+  if [ "$DISABLE_KEEP_ALIVE" = "true" ]; then
+    echo "Removing force-nokeepalive DestinationRule so it doesn't leak into the next (keep-alive) run..."
+    kubectl delete -f ./02_manifests/dr_nokeepalive.yaml || true
+  fi
   
   echo "Downloading results for ${FILE_PREFIX}..."
   local DL_START=$(date +%s)

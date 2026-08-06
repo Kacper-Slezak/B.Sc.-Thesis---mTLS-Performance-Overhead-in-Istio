@@ -1,5 +1,5 @@
 # Performance Comparison Report
-Generated for test run: `20260718_161506`
+Generated for test run: `20260806_194355`
 
 This report compares the performance of different mutual TLS configurations in Istio:
 
@@ -8,47 +8,55 @@ This report compares the performance of different mutual TLS configurations in I
 - **mTLS 1.2 (ChaCha20)**: ECDHE-ECDSA-CHACHA20-POLY1305-SHA256
 - **mTLS 1.2 (AES-CBC)**: ECDHE-ECDSA-AES128-SHA256 (CBC mode)
 
+## TLS Verification (live sidecar stats, not just the applied CR)
+
+- **mtls1.3-default**: `TLS_AES_128_GCM_SHA256`=170105
+- **mtls1.2-gcm**: `ECDHE-RSA-AES256-GCM-SHA384`=176295
+- **mtls1.2-chacha**: `ECDHE-RSA-AES256-GCM-SHA384`=177368
+- **mtls1.2-cbc**: `ECDHE-RSA-AES256-GCM-SHA384`=153067
+
+
 ## Scenario: BASELINE
-| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | Handshake Avg (ms) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
+| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | TLS Handshakes (rate/s) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **mtls1.3-default** | 549.70 | - | 1.715 | - | 2.309 | 0.000 | 294.7 | 244.3 | 32.4 |
-| **mtls1.2-gcm** | 550.00 | +0.05% | 1.610 | -6.11% | 2.201 | 0.000 | 154.7 | 257.3 | 34.5 |
-| **mtls1.2-chacha** | 549.83 | +0.02% | 1.649 | -3.80% | 2.241 | 0.000 | 250.7 | 266.5 | 36.9 |
-| **mtls1.2-cbc** | 550.02 | +0.06% | 1.670 | -2.59% | 2.303 | 0.000 | 235.4 | 226.8 | 37.5 |
+| **mtls1.3-default** | 7699.48 | - | 11.788 | - | 19.582 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-gcm** | 7408.58 | -3.78% | 12.321 | +4.52% | 19.873 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-chacha** | 7350.81 | -4.53% | 12.437 | +5.51% | 20.137 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-cbc** | 7268.27 | -5.60% | 12.584 | +6.75% | 20.226 | 0.00 | 0.0 | 0.0 | 0.0 |
 
 
 ## Scenario: BASELINE-NOKEEPALIVE
-| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | Handshake Avg (ms) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
+| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | TLS Handshakes (rate/s) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **mtls1.3-default** | 550.02 | - | 1.789 | - | 2.622 | 0.000 | 240.7 | 272.7 | 33.9 |
-| **mtls1.2-gcm** | 550.02 | +0.00% | 1.864 | +4.21% | 2.722 | 0.000 | 313.2 | 261.5 | 35.2 |
-| **mtls1.2-chacha** | 550.02 | +0.00% | 1.722 | -3.72% | 2.349 | 0.000 | 231.7 | 250.3 | 35.7 |
-| **mtls1.2-cbc** | 549.58 | -0.08% | 1.685 | -5.82% | 2.334 | 0.000 | 221.8 | 287.7 | 36.2 |
+| **mtls1.3-default** | 550.45 | - | 164.339 | - | 397.744 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-gcm** | 565.83 | +2.79% | 160.163 | -2.54% | 782.664 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-chacha** | 569.01 | +3.37% | 160.409 | -2.39% | 779.338 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-cbc** | 422.93 | -23.17% | 214.622 | +30.60% | 500.174 | 0.00 | 0.0 | 0.0 | 0.0 |
 
 
 ## Scenario: PAYLOAD
-| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | Handshake Avg (ms) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
+| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | TLS Handshakes (rate/s) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **mtls1.3-default** | 110.00 | - | 5.433 | - | 7.162 | 0.000 | 116.2 | 604.9 | 33.3 |
-| **mtls1.2-gcm** | 110.00 | +0.00% | 5.459 | +0.49% | 7.170 | 0.000 | 102.5 | 572.0 | 35.0 |
-| **mtls1.2-chacha** | 110.00 | -0.00% | 5.519 | +1.59% | 7.246 | 0.000 | 124.7 | 616.3 | 35.9 |
-| **mtls1.2-cbc** | 110.00 | +0.00% | 5.489 | +1.03% | 7.255 | 0.000 | 107.7 | 685.3 | 36.6 |
+| **mtls1.3-default** | 1729.31 | - | 50.721 | - | 125.648 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-gcm** | 1772.96 | +2.52% | 49.658 | -2.10% | 121.506 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-chacha** | 1724.13 | -0.30% | 51.134 | +0.81% | 121.917 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-cbc** | 1752.36 | +1.33% | 50.463 | -0.51% | 121.360 | 0.00 | 0.0 | 0.0 | 0.0 |
 
 
 ## Scenario: PAYLOAD-NOKEEPALIVE
-| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | Handshake Avg (ms) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
+| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | TLS Handshakes (rate/s) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **mtls1.3-default** | 110.01 | - | 5.787 | - | 7.500 | 0.000 | 117.9 | 579.4 | 34.4 |
-| **mtls1.2-gcm** | 108.83 | -1.07% | 5.801 | +0.24% | 7.438 | 0.000 | 108.4 | 560.2 | 35.7 |
-| **mtls1.2-chacha** | 110.00 | -0.00% | 5.780 | -0.12% | 7.520 | 0.000 | 132.9 | 534.0 | 37.3 |
-| **mtls1.2-cbc** | 110.00 | -0.00% | 5.870 | +1.44% | 7.683 | 0.000 | 123.2 | 625.4 | 37.0 |
+| **mtls1.3-default** | 484.00 | - | 187.117 | - | 370.366 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-gcm** | 508.22 | +5.00% | 178.055 | -4.84% | 349.373 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-chacha** | 511.62 | +5.71% | 177.175 | -5.31% | 348.302 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-cbc** | 509.42 | +5.25% | 177.598 | -5.09% | 352.294 | 0.00 | 0.0 | 0.0 | 0.0 |
 
 
 ## Scenario: STRESS
-| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | Handshake Avg (ms) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
+| Setup | RPS | RPS Diff | Latency Avg (ms) | Latency Diff | Latency P95 (ms) | TLS Handshakes (rate/s) | Proxy CPU (m) | App CPU (m) | Proxy Mem (MB) |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **mtls1.3-default** | 852.33 | - | 1.740 | - | 2.487 | 0.000 | 442.1 | 408.4 | 33.4 |
-| **mtls1.2-gcm** | 852.39 | +0.01% | 1.711 | -1.70% | 2.455 | 0.000 | 191.5 | 465.3 | 36.1 |
-| **mtls1.2-chacha** | 852.45 | +0.01% | 1.722 | -1.02% | 2.471 | 0.000 | 407.9 | 478.5 | 35.9 |
-| **mtls1.2-cbc** | 852.33 | -0.00% | 1.712 | -1.61% | 2.421 | 0.000 | 396.1 | 250.9 | 36.3 |
+| **mtls1.3-default** | 8787.45 | - | 51.765 | - | 81.843 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-gcm** | 8798.78 | +0.13% | 51.870 | +0.20% | 81.982 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-chacha** | 8893.67 | +1.21% | 51.317 | -0.87% | 81.761 | 0.00 | 0.0 | 0.0 | 0.0 |
+| **mtls1.2-cbc** | 8709.60 | -0.89% | 52.413 | +1.25% | 85.136 | 0.00 | 0.0 | 0.0 | 0.0 |
 

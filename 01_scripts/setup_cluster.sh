@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
 YELLOW='\033[1;33m'
 GREEN='\033[1;32m'
 NC='\033[0m' # No Color
@@ -53,7 +56,33 @@ spec:
         image: grafana/k6:latest
         command: ["tail", "-f", "/dev/null"] # Keep-alive command to hold the container running
 EOF
+echo -e "${YELLOW}10. Configuring Grafana Image Renderer Plugin...${NC}"
+echo "Waiting for Grafana deployment to roll out and spin up pods..."
+
+# Profesjonalne czekanie na gotowość całego Deploymentu zamiast szukania podów po etykietach
+kubectl rollout status deployment/grafana -n istio-system --timeout=180s
+
+echo "Grafana deployment is ready. Fetching active pod name..."
+GRAFANA_POD=$(kubectl get pods -n istio-system -l app=grafana -o jsonpath="{.items[0].metadata.name}" || echo "")
+
+if [ -n "$GRAFANA_POD" ]; then
+  echo "Checking if grafana-image-renderer is already installed..."
+  if kubectl exec -n istio-system "$GRAFANA_POD" -c grafana -- grafana-cli plugins ls | grep -q "grafana-image-renderer"; then
+    echo "Plugin grafana-image-renderer is already installed."
+  else
+    echo "Plugin not found. Installing grafana-image-renderer inside the Grafana pod..."
+    kubectl exec -n istio-system "$GRAFANA_POD" -c grafana -- grafana-cli --timeout 60s plugins install grafana-image-renderer
+    
+    echo "Restarting Grafana pod to apply changes..."
+    kubectl delete pod -n istio-system "$GRAFANA_POD"
+    
+    echo "Waiting for the new Grafana pod to become fully ready again..."
+    kubectl rollout status deployment/grafana -n istio-system --timeout=180s
+  fi
+else
+  echo "Warning: Could not find Grafana pod in istio-system namespace. Skipping plugin check."
+fi
 
 echo -e "${GREEN}==========================================${NC}"
-echo -e "${GREEN}Environment ready! Wait about a minute for the pods to start up.${NC}"
-echo -e "${GREEN}Check their status by running: kubectl get pods${NC}"
+echo -e "${GREEN}Environment ready! All resources and plugins are configured.${NC}"
+echo -e "${GREEN}Check their status by running: kubectl get pods -A${NC}"
