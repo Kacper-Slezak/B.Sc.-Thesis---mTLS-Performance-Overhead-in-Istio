@@ -4,15 +4,15 @@ Generated for test run: `20260807_120708`
 This report compares the performance of different mutual TLS configurations in Istio:
 
 - **mTLS 1.3 (Default)**: TLS_AES_256_GCM_SHA384 (Default Istio cipher suite)
-- **mTLS 1.2 (AES-GCM)**: ECDHE-ECDSA-AES128-GCM-SHA256
-- **mTLS 1.2 (ChaCha20)**: ECDHE-ECDSA-CHACHA20-POLY1305-SHA256
-- **mTLS 1.2 (AES-CBC)**: ECDHE-ECDSA-AES128-SHA256 (CBC mode)
+- **mTLS 1.2 (AES-GCM)**: ECDHE-RSA-AES128-GCM-SHA256
+- **mTLS 1.2 (ChaCha20)**: ECDHE-RSA-CHACHA20-POLY1305-SHA256
+- **mTLS 1.2 (AES-CBC)**: ECDHE-RSA-AES128-SHA256 (CBC mode)
 
 ## TLS Verification (live sidecar stats, not just the applied CR)
 
 - **mtls1.3-default**: `TLS_AES_128_GCM_SHA256`=166947
 - **mtls1.2-gcm**: `ECDHE-RSA-AES256-GCM-SHA384`=174036
-- **mtls1.2-chacha**: `ECDHE-RSA-CHACHA20-POLY1305`=173734ww
+- **mtls1.2-chacha**: `ECDHE-RSA-CHACHA20-POLY1305`=173734
 - **mtls1.2-cbc**: `ECDHE-RSA-AES128-SHA256`=170268
 
 

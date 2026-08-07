@@ -111,7 +111,11 @@ run_test_profile() {
 
   echo "========================================================================"
   echo "Starting test profile: [${TEST_TYPE}]"
-  echo "Keep-Alive: $(( [ "$DISABLE_KEEP_ALIVE" = "true" ] && echo "OFF (Connection: close)" ) || echo "ON (Keep-Alive)" )"
+  if [ "$DISABLE_KEEP_ALIVE" = "true" ]; then
+    echo "Keep-Alive: OFF (Connection: close)"
+  else
+    echo "Keep-Alive: ON (Keep-Alive)"
+  fi
   echo "Setup: [${SETUP_NAME}]"
   echo "========================================================================"
   
