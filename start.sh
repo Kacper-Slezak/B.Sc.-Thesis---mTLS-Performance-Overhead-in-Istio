@@ -54,3 +54,4 @@ fi
 
 echo "Tests completed successfully! Clean up any EnvoyFilters to leave cluster in default state."
 kubectl delete envoyfilter --all -n default || true
+kubectl delete destinationrule force-cipher-client --ignore-not-found

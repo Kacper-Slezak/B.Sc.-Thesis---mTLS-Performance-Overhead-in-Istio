@@ -1,11 +1,11 @@
 #!/bin/bash
-
-# Exit immediately if a command exits with a non-zero status
 set -e
+set -o pipefail
 
 YELLOW='\033[1;33m'
 GREEN='\033[1;32m'
-NC='\033[0m' # No Color
+RED='\033[0;31m'
+NC='\033[0m'
 
 echo -e "${YELLOW}1. Deleting old cluster (if it exists)...${NC}"
 k3d cluster delete thesis-cluster || true
@@ -19,22 +19,67 @@ kubectl config set-cluster k3d-thesis-cluster --server=https://127.0.0.1:6550
 echo -e "${YELLOW}4. Checking connection to the cluster...${NC}"
 kubectl get nodes
 
-echo -e "${YELLOW}5. Installing Istio (Profile: MINIMAL)...${NC}"
+echo -e "${YELLOW}5. Testing internet / registry access from INSIDE the k3d node...${NC}"
+NODE_CONTAINER=$(docker ps --filter "name=k3d-thesis-cluster-server-0" --format "{{.Names}}" | head -n1)
+
+if [ -z "$NODE_CONTAINER" ]; then
+  echo -e "${RED}Nie znaleziono kontenera node'a k3d (k3d-thesis-cluster-server-0). Sprawdź 'docker ps'.${NC}"
+  exit 1
+fi
+
+echo "Node container: $NODE_CONTAINER"
+
+echo "-> Test DNS (rozwiązywanie nazw) wewnątrz node'a:"
+if ! docker exec "$NODE_CONTAINER" getent hosts docker.io >/dev/null 2>&1; then
+  echo -e "${RED}DNS NIE działa wewnątrz node'a k3d - to bardzo częsta przyczyna 'ContainerCreating' na zawsze.${NC}"
+  echo "Sprawdź ustawienia sieci Docker Desktop / VPN / firewall."
+else
+  echo -e "${GREEN}DNS OK.${NC}"
+fi
+
+echo "-> Test pobrania warstwy obrazu z Docker Hub (mały obraz testowy):"
+if docker exec "$NODE_CONTAINER" sh -c "wget -q -T 10 -O /dev/null https://registry-1.docker.io/v2/" 2>/dev/null; then
+  echo -e "${GREEN}Połączenie z Docker Hub OK.${NC}"
+else
+  echo -e "${RED}Node k3d NIE może połączyć się z registry-1.docker.io.${NC}"
+  echo "To wygląda na problem z internetem / proxy / firewallem na hoście Docker."
+fi
+
+echo -e "${GREEN}==========================================${NC}"
+echo -e "${GREEN}Faza 1 zakończona. Klaster stoi i podano wynik testu sieci.${NC}"
+echo -e "${GREEN}Jeśli oba testy wyszły OK -> uruchom fazę 2 (install-istio).${NC}"
+echo -e "${GREEN}Jeśli DNS lub registry NIE działa -> najpierw napraw sieć (patrz komunikaty powyżej).${NC}"
+
+ISTIO_VERSION="release-1.22"
+
+echo -e "${YELLOW}0. Sanity check: czy klaster i node są gotowe?${NC}"
+kubectl get nodes
+
+echo -e "${YELLOW}1. Installing Istio (Profile: MINIMAL)...${NC}"
 istioctl install --set profile=minimal -y
 
-echo -e "${YELLOW}6. Enabling auto-injection of sidecars (Envoy)...${NC}"
+echo -e "${YELLOW}2. Enabling auto-injection of sidecars (Envoy)...${NC}"
 kubectl label namespace default istio-injection=enabled --overwrite
 
-echo -e "${YELLOW}7. Installing monitoring tools...${NC}"
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/addons/prometheus.yaml
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/addons/grafana.yaml
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/addons/kiali.yaml
+echo -e "${YELLOW}3. Installing monitoring tools...${NC}"
+kubectl apply -f "https://raw.githubusercontent.com/istio/istio/${ISTIO_VERSION}/samples/addons/prometheus.yaml"
+kubectl apply -f "https://raw.githubusercontent.com/istio/istio/${ISTIO_VERSION}/samples/addons/grafana.yaml"
+kubectl apply -f "https://raw.githubusercontent.com/istio/istio/${ISTIO_VERSION}/samples/addons/kiali.yaml"
 
-echo -e "${YELLOW}8. Deploying HTTPBIN application (Server)...${NC}"
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/httpbin/httpbin.yaml
+echo -e "${YELLOW}4. Deploying HTTPBIN application (Server)...${NC}"
+kubectl apply -f "https://raw.githubusercontent.com/istio/istio/${ISTIO_VERSION}/samples/httpbin/httpbin.yaml"
+kubectl patch deployment httpbin --type=merge \
+  -p '{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/statsInclusionRegexps": ".*ssl.*,.*tls.*"}}}}}'
+# UWAGA: obraz "docker.io/kong/httpbin" bez taga (czyli :latest = 0.2.0) ma znany,
+# upstream'owy bug - gunicorn nie jest zainstalowany w venv, przez co kontener
+# wchodzi w CrashLoopBackOff z błędem "gunicorn could not be found within PATH".
+# Zob. https://github.com/istio/istio/issues/53510 oraz Kong/httpbin#60/#62.
+# Fix: przypinamy działający tag 0.1.0.
+echo "Patching httpbin image to a working tag (0.2.0 is broken upstream)..."
+kubectl set image deployment/httpbin httpbin=docker.io/kong/httpbin:0.1.0
 
-echo -e "${YELLOW}9. Deploying K6 tool (Client)...${NC}"
-cat <<EOF | kubectl apply -f -
+echo -e "${YELLOW}5. Deploying K6 tool (Client)...${NC}"
+cat <<'EOF' | kubectl apply -f -
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -54,33 +99,44 @@ spec:
       containers:
       - name: k6
         image: grafana/k6:latest
-        command: ["tail", "-f", "/dev/null"] # Keep-alive command to hold the container running
+        command: ["tail", "-f", "/dev/null"]
 EOF
-echo -e "${YELLOW}10. Configuring Grafana Image Renderer Plugin...${NC}"
-echo "Waiting for Grafana deployment to roll out and spin up pods..."
+kubectl patch deployment k6-deploy --type=merge \
+  -p '{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/statsInclusionRegexps": ".*ssl.*,.*tls.*"}}}}}'
 
-# Profesjonalne czekanie na gotowość całego Deploymentu zamiast szukania podów po etykietach
-kubectl rollout status deployment/grafana -n istio-system --timeout=180s
+echo -e "${YELLOW}6. Configuring Grafana Image Renderer Plugin...${NC}"
+kubectl rollout status deployment/grafana -n istio-system --timeout=300s
 
-echo "Grafana deployment is ready. Fetching active pod name..."
-GRAFANA_POD=$(kubectl get pods -n istio-system -l app=grafana -o jsonpath="{.items[0].metadata.name}" || echo "")
+GRAFANA_POD=$(kubectl get pods -n istio-system -l app.kubernetes.io/name=grafana -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true)
 
 if [ -n "$GRAFANA_POD" ]; then
-  echo "Checking if grafana-image-renderer is already installed..."
-  if kubectl exec -n istio-system "$GRAFANA_POD" -c grafana -- grafana-cli plugins ls | grep -q "grafana-image-renderer"; then
+  echo "Found Grafana pod: $GRAFANA_POD. Checking plugins..."
+  if kubectl exec -n istio-system "$GRAFANA_POD" -c grafana -- grafana cli plugins ls 2>/dev/null | grep -q "grafana-image-renderer"; then
     echo "Plugin grafana-image-renderer is already installed."
   else
-    echo "Plugin not found. Installing grafana-image-renderer inside the Grafana pod..."
-    kubectl exec -n istio-system "$GRAFANA_POD" -c grafana -- grafana-cli --timeout 60s plugins install grafana-image-renderer
-    
+    echo "Installing grafana-image-renderer..."
+    kubectl exec -n istio-system "$GRAFANA_POD" -c grafana -- grafana cli plugins install grafana-image-renderer
     echo "Restarting Grafana pod to apply changes..."
     kubectl delete pod -n istio-system "$GRAFANA_POD"
-    
-    echo "Waiting for the new Grafana pod to become fully ready again..."
-    kubectl rollout status deployment/grafana -n istio-system --timeout=180s
+    kubectl rollout status deployment/grafana -n istio-system --timeout=210s
   fi
 else
-  echo "Warning: Could not find Grafana pod in istio-system namespace. Skipping plugin check."
+  echo "Warning: Could not find Grafana pod. Skipping plugin check."
+fi
+
+echo -e "${YELLOW}7. Waiting for httpbin and k6 pods to become ready...${NC}"
+if ! kubectl rollout status deployment/httpbin -n default --timeout=240s; then
+  echo -e "${YELLOW}httpbin rollout nie zakończył się w czasie - diagnostyka:${NC}"
+  kubectl get pods -n default -l app=httpbin -o wide
+  kubectl describe pods -n default -l app=httpbin | tail -40
+  exit 1
+fi
+
+if ! kubectl rollout status deployment/k6-deploy -n default --timeout=240s; then
+  echo -e "${YELLOW}k6-deploy rollout nie zakończył się w czasie - diagnostyka:${NC}"
+  kubectl get pods -n default -l app=k6 -o wide
+  kubectl describe pods -n default -l app=k6 | tail -40
+  exit 1
 fi
 
 echo -e "${GREEN}==========================================${NC}"

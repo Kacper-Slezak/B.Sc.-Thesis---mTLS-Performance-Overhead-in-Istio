@@ -28,3 +28,34 @@ spec:
                 tls_minimum_protocol_version: TLSv1_2
                 cipher_suites:
                   - "ECDHE-RSA-AES128-SHA256"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: force-cipher-k6-client
+  namespace: default
+spec:
+  workloadSelector:
+    labels:
+      app: k6 # Zmieniamy cel na naszego klienta testowego
+  configPatches:
+  - applyTo: CLUSTER
+    match:
+      context: SIDECAR_OUTBOUND
+      cluster:
+        # Dokładny adres klastra docelowego (serwisu httpbin na porcie 8000)
+        name: "outbound|8000||httpbin.default.svc.cluster.local"
+    patch:
+      operation: MERGE
+      value:
+        transport_socket:
+          name: envoy.transport_sockets.tls
+          typed_config:
+            # Dla klienta używamy UpstreamTlsContext zamiast DownstreamTlsContext!
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+            common_tls_context:
+              tls_params:
+                tls_maximum_protocol_version: TLSv1_2
+                tls_minimum_protocol_version: TLSv1_2
+                cipher_suites:
+                  - "ECDHE-RSA-AES128-SHA256"
