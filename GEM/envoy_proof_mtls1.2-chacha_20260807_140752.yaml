@@ -1,0 +1,77 @@
+apiVersion: v1
+items:
+- apiVersion: networking.istio.io/v1alpha3
+  kind: EnvoyFilter
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1alpha3","kind":"EnvoyFilter","metadata":{"annotations":{},"name":"force-cipher-k6-client","namespace":"default"},"spec":{"configPatches":[{"applyTo":"CLUSTER","match":{"cluster":{"name":"outbound|8000||httpbin.default.svc.cluster.local"},"context":"SIDECAR_OUTBOUND"},"patch":{"operation":"MERGE","value":{"transport_socket":{"name":"envoy.transport_sockets.tls","typed_config":{"@type":"type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext","common_tls_context":{"tls_params":{"cipher_suites":["ECDHE-RSA-CHACHA20-POLY1305"],"tls_maximum_protocol_version":"TLSv1_2","tls_minimum_protocol_version":"TLSv1_2"}}}}}}}],"workloadSelector":{"labels":{"app":"k6"}}}}
+    creationTimestamp: "2026-08-07T12:44:36Z"
+    generation: 1
+    name: force-cipher-k6-client
+    namespace: default
+    resourceVersion: "3761"
+    uid: 9b1c0886-25a5-40c2-9e4b-e40f9cb53c20
+  spec:
+    configPatches:
+    - applyTo: CLUSTER
+      match:
+        cluster:
+          name: outbound|8000||httpbin.default.svc.cluster.local
+        context: SIDECAR_OUTBOUND
+      patch:
+        operation: MERGE
+        value:
+          transport_socket:
+            name: envoy.transport_sockets.tls
+            typed_config:
+              '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+              common_tls_context:
+                tls_params:
+                  cipher_suites:
+                  - ECDHE-RSA-CHACHA20-POLY1305
+                  tls_maximum_protocol_version: TLSv1_2
+                  tls_minimum_protocol_version: TLSv1_2
+    workloadSelector:
+      labels:
+        app: k6
+- apiVersion: networking.istio.io/v1alpha3
+  kind: EnvoyFilter
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1alpha3","kind":"EnvoyFilter","metadata":{"annotations":{},"name":"force-downgrade-httpbin-server","namespace":"default"},"spec":{"configPatches":[{"applyTo":"FILTER_CHAIN","match":{"context":"SIDECAR_INBOUND","listener":{"filterChain":{"destinationPort":8080,"transportProtocol":"tls"}}},"patch":{"operation":"MERGE","value":{"transport_socket":{"name":"envoy.transport_sockets.tls","typed_config":{"@type":"type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext","common_tls_context":{"tls_params":{"cipher_suites":["ECDHE-RSA-CHACHA20-POLY1305"],"tls_maximum_protocol_version":"TLSv1_2","tls_minimum_protocol_version":"TLSv1_2"}}}}}}}],"workloadSelector":{"labels":{"app":"httpbin"}}}}
+    creationTimestamp: "2026-08-07T12:44:36Z"
+    generation: 1
+    name: force-downgrade-httpbin-server
+    namespace: default
+    resourceVersion: "3760"
+    uid: a7348070-8932-4b66-a2f0-33a3ea7b9f28
+  spec:
+    configPatches:
+    - applyTo: FILTER_CHAIN
+      match:
+        context: SIDECAR_INBOUND
+        listener:
+          filterChain:
+            destinationPort: 8080
+            transportProtocol: tls
+      patch:
+        operation: MERGE
+        value:
+          transport_socket:
+            name: envoy.transport_sockets.tls
+            typed_config:
+              '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+              common_tls_context:
+                tls_params:
+                  cipher_suites:
+                  - ECDHE-RSA-CHACHA20-POLY1305
+                  tls_maximum_protocol_version: TLSv1_2
+                  tls_minimum_protocol_version: TLSv1_2
+    workloadSelector:
+      labels:
+        app: httpbin
+kind: List
+metadata:
+  resourceVersion: ""

@@ -23,7 +23,7 @@ echo "Detected K6 pod: $K6_POD"
 # RUN ALL BENCHMARKS
 # ==========================================
 echo "--- Running all benchmarking scenarios (mTLS 1.3 vs 1.2 with different ciphers) ---"
-./run_all_test.sh
+./run_all_test_old.sh
 
 echo "--- Generating performance comparison report ---"
 python3 ./05_analitics/compare_results.py

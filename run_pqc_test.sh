@@ -155,6 +155,7 @@ spec:
     patch:
       operation: MERGE
       value:
+        per_connection_buffer_limit_bytes: 32768
         transport_socket:
           name: envoy.transport_sockets.tls
           typed_config:
@@ -165,6 +166,8 @@ spec:
                 tls_minimum_protocol_version: TLSv1_3
                 ecdh_curves:
                   - "X25519MLKEM768"
+                  - "X25519Kyber768Draft00"
+                  - "X25519"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: EnvoyFilter
@@ -186,6 +189,7 @@ spec:
     patch:
       operation: MERGE
       value:
+        per_connection_buffer_limit_bytes: 32768
         transport_socket:
           name: envoy.transport_sockets.tls
           typed_config:
@@ -196,6 +200,8 @@ spec:
                 tls_minimum_protocol_version: TLSv1_3
                 ecdh_curves:
                   - "X25519MLKEM768"
+                  - "X25519Kyber768Draft00"
+                  - "X25519"
 EOF
 
 echo "Waiting 15 seconds for Quantum EnvoyFilter propagation..."

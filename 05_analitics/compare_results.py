@@ -8,7 +8,7 @@ SUMMARY_DIR = './04_results/Summary'
 METRICS_DIR = './04_results/Metrics'
 OUTPUT_REPORT = './04_results/comparison_report.md'
 
-SETUPS = ['mtls1.3-default', 'mtls1.2-gcm', 'mtls1.2-chacha', 'mtls1.2-cbc']
+SETUPS = ['mtls1.3-default', 'mtls1.2-gcm', 'mtls1.2-chacha', 'mtls1.2-cbc', 'mtls1.3-postquantum']
 SCENARIOS = ['baseline', 'baseline-nokeepalive', 'payload', 'payload-nokeepalive', 'stress']
 
 def get_latest_timestamp():
@@ -130,6 +130,7 @@ def generate_report():
     report.append("- **mTLS 1.2 (AES-GCM)**: ECDHE-ECDSA-AES128-GCM-SHA256")
     report.append("- **mTLS 1.2 (ChaCha20)**: ECDHE-ECDSA-CHACHA20-POLY1305-SHA256")
     report.append("- **mTLS 1.2 (AES-CBC)**: ECDHE-ECDSA-AES128-SHA256 (CBC mode)\n")
+    report.append("- **mTLS 1.3 (Post-Quantum)**: X25519MLKEM768 (Hybrid Kyber Key Exchange)\n")
 
     # TLS verification section: `kubectl get envoyfilter -o yaml` only proves the
     # CRD was accepted by the API server -- NOT that Envoy actually negotiated
