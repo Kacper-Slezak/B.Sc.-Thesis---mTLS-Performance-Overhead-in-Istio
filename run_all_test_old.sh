@@ -122,8 +122,11 @@ get_ssl_handshake_sum_count() {
   local prom_text
   prom_text=$(kubectl exec "$pod" -c istio-proxy -- curl -s localhost:15000/stats/prometheus 2>/dev/null)
   local sum count
-  sum=$(echo "$prom_text" | grep -E '_ssl_handshake_sum' | awk '{s+=$NF} END{printf "%f", s+0}')
-  count=$(echo "$prom_text" | grep -E '_ssl_handshake_count' | awk '{s+=$NF} END{printf "%f", s+0}')
+  
+  # Poprawiony grep zamykający wyłapywanie tylko wartości liczbowych
+  sum=$(echo "$prom_text" | grep -E '^envoy_.*_ssl_handshake_sum' | awk '{s+=$NF} END{printf "%f", s+0}')
+  count=$(echo "$prom_text" | grep -E '^envoy_.*_ssl_handshake_count' | awk '{s+=$NF} END{printf "%f", s+0}')
+  
   echo "${sum:-0} ${count:-0}"
 }
 

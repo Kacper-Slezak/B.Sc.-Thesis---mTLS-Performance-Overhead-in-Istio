@@ -40,6 +40,7 @@ if [ -z "$K6_POD" ]; then
   echo "BLAD: nie znaleziono poda k6 (label app=k6). Sprawdz kubectl context." >&2
   exit 1
 fi
+echo "Info: K6_POD=$K6_POD"
 
 # ---- cztery rownolegle tablice zamiast jednego dzielonego stringa ----
 NAMES=(
@@ -183,13 +184,32 @@ for i in "${!NAMES[@]}"; do
   sleep 12
 
   HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}" 2>/dev/null)
+  if [ -z "$HTTPBIN_POD" ]; then
+    echo "BLAD: nie znaleziono poda httpbin (label app=httpbin) - pomijam ten setup." >&2
+    continue
+  fi
 
   STATS_BEFORE_FILE=$(mktemp)
   kubectl exec "$HTTPBIN_POD" -c istio-proxy -- curl -s localhost:15000/stats 2>/dev/null \
     | grep -i -E "ssl\.(ciphers|curves)" > "$STATS_BEFORE_FILE"
 
+  # PATCH: bez tlumienia bledow - jesli k6 sie wywali, MUSISZ to zobaczyc,
+  # bo w przeciwnym razie liczniki sie nie zmienia i cala weryfikacja
+  # bedzie klamac (wygladajac jak "config nie dziala" zamiast "ruch w
+  # ogole nie poszedl"). Dodatkowo sprawdzamy jawnie kod wyjscia.
+  echo "Generuje ruch diagnostyczny (5 VU / 8s) przez k6..."
+  K6_WARMUP_LOG=$(mktemp)
   echo "import http from 'k6/http'; export default function() { http.get('http://httpbin.default.svc.cluster.local:8000/get'); }" | \
-    kubectl exec -i "$K6_POD" -c k6 -- k6 run --vus 5 --duration 8s - >/dev/null 2>&1 || true
+    kubectl exec -i "$K6_POD" -c k6 -- k6 run --vus 5 --duration 8s - > "$K6_WARMUP_LOG" 2>&1
+  K6_EXIT=$?
+  if [ $K6_EXIT -ne 0 ]; then
+    echo "!! UWAGA: k6 run zakonczyl sie kodem $K6_EXIT (nie 0). Ostatnie 20 linii logu:" >&2
+    tail -n 20 "$K6_WARMUP_LOG" >&2
+  else
+    # pokaz tylko podsumowanie iteracji zeby potwierdzic ze requesty faktycznie poszly
+    grep -E "http_reqs|iterations" "$K6_WARMUP_LOG" || echo "  (brak linii http_reqs/iterations w outpucie - podejrzane)"
+  fi
+  rm -f "$K6_WARMUP_LOG"
 
   STATS_AFTER_FILE=$(mktemp)
   kubectl exec "$HTTPBIN_POD" -c istio-proxy -- curl -s localhost:15000/stats 2>/dev/null \
@@ -197,6 +217,14 @@ for i in "${!NAMES[@]}"; do
 
   echo "--- stan PO (kumulatywny, dla wgladu): ---"
   cat "$STATS_AFTER_FILE" | tee "${RESULTS_DIR}/verify_${NAME}.txt"
+
+  if diff -q "$STATS_BEFORE_FILE" "$STATS_AFTER_FILE" >/dev/null 2>&1; then
+    echo "!! UWAGA: stan PRZED i PO jest identyczny co do bajtu - ZEROWY ruch"
+    echo "   dotarl do httpbin w tym oknie. To prawie na pewno oznacza ze"
+    echo "   k6 run w ogole sie nie wykonal poprawnie (patrz log k6 wyzej),"
+    echo "   a NIE ze config cipher/curve jest zly. Napraw najpierw to,"
+    echo "   zanim bedziesz wyciagac wnioski z cipher_ok/curve_ok ponizej."
+  fi
 
   CIPHER_OK="NIE"; CURVE_OK="NIE"
   if check_delta "$STATS_BEFORE_FILE" "$STATS_AFTER_FILE" "$EXPECTED_CIPHER" "ciphers"; then CIPHER_OK="TAK"; fi
