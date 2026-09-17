@@ -1,6 +1,6 @@
   #!/bin/bash
   set -e
-  set -o pipefail
+  set -e pipefail
 
   YELLOW='\033[1;33m'
   GREEN='\033[1;32m'
@@ -50,7 +50,7 @@
   echo -e "${GREEN}Jeśli oba testy wyszły OK -> uruchom fazę 2 (install-istio).${NC}"
   echo -e "${GREEN}Jeśli DNS lub registry NIE działa -> najpierw napraw sieć (patrz komunikaty powyżej).${NC}"
 
-  ISTIO_VERSION="release-1.22"
+    ISTIO_VERSION="release-1.24"
 
   echo -e "${YELLOW}0. Sanity check: czy klaster i node są gotowe?${NC}"
   kubectl get nodes
@@ -80,27 +80,27 @@
 
   echo -e "${YELLOW}5. Deploying K6 tool (Client)...${NC}"
   cat <<'EOF' | kubectl apply -f -
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: k6-deploy
-    labels:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k6-deploy
+  labels:
+    app: k6
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
       app: k6
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
+  template:
+    metadata:
+      labels:
         app: k6
-    template:
-      metadata:
-        labels:
-          app: k6
-      spec:
-        containers:
-        - name: k6
-          image: grafana/k6:latest
-          command: ["tail", "-f", "/dev/null"]
-  EOF
+    spec:
+      containers:
+      - name: k6
+        image: grafana/k6:latest
+        command: ["tail", "-f", "/dev/null"]
+EOF
   kubectl patch deployment k6-deploy --type=merge \
     -p '{"spec":{"template":{"metadata":{"annotations":{"sidecar.istio.io/statsInclusionRegexps": ".*ssl.*,.*tls.*"}}}}}'
 
