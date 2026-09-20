@@ -37,13 +37,13 @@ metadata:
 spec:
   workloadSelector:
     labels:
-      app: k6 # Zmieniamy cel na naszego klienta testowego
+      app: k6 # Target the k6 benchmark client pod
   configPatches:
   - applyTo: CLUSTER
     match:
       context: SIDECAR_OUTBOUND
       cluster:
-        # Dokładny adres klastra docelowego (serwisu httpbin na porcie 8000)
+        # Outbound cluster targeting the httpbin service on port 8000
         name: "outbound|8000||httpbin.default.svc.cluster.local"
     patch:
       operation: MERGE
@@ -51,7 +51,7 @@ spec:
         transport_socket:
           name: envoy.transport_sockets.tls
           typed_config:
-            # Dla klienta używamy UpstreamTlsContext zamiast DownstreamTlsContext!
+            # Client requires UpstreamTlsContext (initiating mTLS connection)
             "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
             common_tls_context:
               tls_params:

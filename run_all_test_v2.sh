@@ -167,8 +167,10 @@ run_test_profile() {
 
   echo "Downloading results..."
   kubectl exec $K6_POD -c k6 -- gzip -c /tmp/raw.json > ./04_results/RawLogs/raw_${FILE_PREFIX}.json.gz
-  gzip -d -f ./04_results/RawLogs/raw_${FILE_PREFIX}.json.gz
+  
   kubectl exec $K6_POD -c k6 -- cat /tmp/summary.json > ./04_results/Summary/summary_${FILE_PREFIX}.json
+  
+  kubectl exec $K6_POD -c k6 -- rm -f /tmp/raw.json /tmp/summary.json
 
   echo "Fetching metrics from Prometheus and generating plots..."
   python3 ./05_analitics/fetch_and_plot.py --start "$START_TIME" --end "$END_TIME" --setup "$SETUP_NAME" --test-type "$TEST_TYPE" --prefix "$FILE_PREFIX" || echo "Warning: Fetch failed."
@@ -245,7 +247,7 @@ setup_mtls1_3() {
 }
 
 setup_mtls1_2_gcm() {
-  echo "=== BEGIN SETUP 2: mTLS 1.2 (AES-GCM) ==="
+  echo "=== BEGIN SETUP 2: mTLS 1.2 (AES-GCM 128) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_gcm.yaml
   sleep 15
@@ -255,8 +257,19 @@ setup_mtls1_2_gcm() {
   capture_cipher_stats "mtls1.2-gcm" "after"
 }
 
+setup_mtls1_2_gcm256() {
+  echo "=== BEGIN SETUP 3: mTLS 1.2 (AES-GCM 256) ==="
+  kubectl delete envoyfilter --all -n default 2>/dev/null || true
+  kubectl apply -f ./02_manifests/envoyfilter_gcm256.yaml
+  sleep 15
+  run_warmup
+  capture_cipher_stats "mtls1.2-gcm256" "before"
+  run_full_battery "mtls1.2-gcm256"
+  capture_cipher_stats "mtls1.2-gcm256" "after"
+}
+
 setup_mtls1_2_chacha() {
-  echo "=== BEGIN SETUP 3: mTLS 1.2 (ChaCha20) ==="
+  echo "=== BEGIN SETUP 4: mTLS 1.2 (ChaCha20) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_chacha.yaml
   sleep 15
@@ -267,7 +280,7 @@ setup_mtls1_2_chacha() {
 }
 
 setup_mtls1_2_cbc() {
-  echo "=== BEGIN SETUP 4: mTLS 1.2 (AES-CBC) ==="
+  echo "=== BEGIN SETUP 5: mTLS 1.2 (AES-CBC) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_cbc.yaml
   sleep 15
@@ -278,78 +291,9 @@ setup_mtls1_2_cbc() {
 }
 
 setup_mtls1_3_pqc() {
-  echo "=== BEGIN SETUP 5: mTLS 1.3 Post-Quantum (ML-KEM) ==="
+  echo "=== BEGIN SETUP 6: mTLS 1.3 Post-Quantum (ML-KEM) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
-
-  echo "Applying Quantum EnvoyFilters (Client & Server) with 32KB buffers..."
-  cat <<EOF | kubectl apply -f -
-apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
-metadata:
-  name: force-pqc-client
-  namespace: default
-spec:
-  workloadSelector:
-    labels:
-      app: k6
-  configPatches:
-  - applyTo: CLUSTER
-    match:
-      context: SIDECAR_OUTBOUND
-      cluster:
-        name: "outbound|8000||httpbin.default.svc.cluster.local"
-    patch:
-      operation: MERGE
-      value:
-        per_connection_buffer_limit_bytes: 32768
-        transport_socket:
-          name: envoy.transport_sockets.tls
-          typed_config:
-            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
-            common_tls_context:
-              tls_params:
-                tls_maximum_protocol_version: TLSv1_3
-                tls_minimum_protocol_version: TLSv1_3
-                ecdh_curves:
-                  - "X25519MLKEM768"
-                  - "X25519Kyber768Draft00"
-                  - "X25519"
----
-apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
-metadata:
-  name: force-pqc-server
-  namespace: default
-spec:
-  workloadSelector:
-    labels:
-      app: httpbin
-  configPatches:
-  - applyTo: FILTER_CHAIN
-    match:
-      context: SIDECAR_INBOUND
-      listener:
-        portNumber: 15006
-        filterChain:
-          transportProtocol: tls
-    patch:
-      operation: MERGE
-      value:
-        per_connection_buffer_limit_bytes: 32768
-        transport_socket:
-          name: envoy.transport_sockets.tls
-          typed_config:
-            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
-            common_tls_context:
-              tls_params:
-                tls_maximum_protocol_version: TLSv1_3
-                tls_minimum_protocol_version: TLSv1_3
-                ecdh_curves:
-                  - "X25519MLKEM768"
-                  - "X25519Kyber768Draft00"
-                  - "X25519"
-EOF
-
+  kubectl apply -f ./02_manifests/envoyfilter_pqc.yaml
   sleep 15
   run_warmup
   capture_cipher_stats "mtls1.3-postquantum" "before"
@@ -360,7 +304,7 @@ EOF
 # ==========================================
 # RANDOMIZED EXECUTION ENGINE
 # ==========================================
-SETUPS=("plaintext" "mtls1.3-default" "mtls1.2-gcm" "mtls1.2-chacha" "mtls1.2-cbc" "mtls1.3-postquantum")
+SETUPS=("plaintext" "mtls1.3-default" "mtls1.2-gcm" "mtls1.2-gcm256" "mtls1.2-chacha" "mtls1.2-cbc" "mtls1.3-postquantum")
 
 SHUFFLED_SETUPS=($(printf "%s\n" "${SETUPS[@]}" | shuf))
 
@@ -374,11 +318,12 @@ sleep 3
 
 for SETUP in "${SHUFFLED_SETUPS[@]}"; do
   case $SETUP in
-    "plaintext")       setup_plaintext ;;
-    "mtls1.3-default") setup_mtls1_3 ;;
-    "mtls1.2-gcm")     setup_mtls1_2_gcm ;;
-    "mtls1.2-chacha")  setup_mtls1_2_chacha ;;
-    "mtls1.2-cbc")     setup_mtls1_2_cbc ;;
+    "plaintext")           setup_plaintext ;;
+    "mtls1.3-default")     setup_mtls1_3 ;;
+    "mtls1.2-gcm")         setup_mtls1_2_gcm ;;
+    "mtls1.2-gcm256")      setup_mtls1_2_gcm256 ;;
+    "mtls1.2-chacha")      setup_mtls1_2_chacha ;;
+    "mtls1.2-cbc")         setup_mtls1_2_cbc ;;
     "mtls1.3-postquantum") setup_mtls1_3_pqc ;;
   esac
 

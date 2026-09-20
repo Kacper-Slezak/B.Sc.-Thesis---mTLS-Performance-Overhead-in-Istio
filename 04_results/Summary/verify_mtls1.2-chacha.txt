@@ -1,5 +1,7 @@
-listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 20996
-listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 3170
-listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 57772
-listener.0.0.0.0_15006.ssl.curves.X25519: 58441
-listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 23497
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 15
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-SHA256: 10
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES256-GCM-SHA384: 10
+listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-CHACHA20-POLY1305: 15
+listener.0.0.0.0_15006.ssl.ciphers.TLS_AES_128_GCM_SHA256: 35
+listener.0.0.0.0_15006.ssl.curves.X25519: 80
+listener.0.0.0.0_15006.ssl.curves.X25519MLKEM768: 5

@@ -1,0 +1,57 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: force-pqc-client
+  namespace: default
+spec:
+  workloadSelector:
+    labels:
+      app: k6
+  configPatches:
+  - applyTo: CLUSTER
+    match:
+      context: SIDECAR_OUTBOUND
+      cluster:
+        name: "outbound|8000||httpbin.default.svc.cluster.local"
+    patch:
+      operation: MERGE
+      value:
+        transport_socket:
+          name: envoy.transport_sockets.tls
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+            common_tls_context:
+              tls_params:
+                tls_maximum_protocol_version: TLSv1_3
+                tls_minimum_protocol_version: TLSv1_3
+                ecdh_curves: ["X25519MLKEM768", "X25519Kyber768Draft00", "X25519"]
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: force-pqc-server
+  namespace: default
+spec:
+  workloadSelector:
+    labels:
+      app: httpbin
+  configPatches:
+  - applyTo: FILTER_CHAIN
+    match:
+      context: SIDECAR_INBOUND
+      listener:
+        filterChain:
+          destinationPort: 8080
+          transportProtocol: tls
+    patch:
+      operation: MERGE
+      value:
+        transport_socket:
+          name: envoy.transport_sockets.tls
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+            common_tls_context:
+              tls_params:
+                tls_maximum_protocol_version: TLSv1_3
+                tls_minimum_protocol_version: TLSv1_3
+                ecdh_curves: ["X25519MLKEM768", "X25519Kyber768Draft00", "X25519"]

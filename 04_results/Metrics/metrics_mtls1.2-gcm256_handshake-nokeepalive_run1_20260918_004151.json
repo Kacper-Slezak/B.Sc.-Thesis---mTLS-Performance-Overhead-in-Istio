@@ -1,0 +1,4233 @@
+{
+  "cpu": [
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 0.36712854138315126,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 0.36712854138315126,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 0.30277090807868484,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 0.2905332900325798,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 0.27829567198647476,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 0.26605805394036974,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 0.3482047364400447,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 0.35550696012039895,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 0.35550696012039895,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 0.35550696012039895,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 0.35550696012039895,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 0.35550696012039895,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 0.35550696012039895,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 0.3618936399568656,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 0.3618936399568656,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 0.344163203626737,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 0.344163203626737,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 0.344163203626737,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 0.344163203626737,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 0.3524972909073105,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 0.3524972909073105,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 0.3524972909073105,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 0.3524972909073105,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 0.2554791959584197,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 0.26822972665618355,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 0.23124999999999396,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 0.27445656125589996,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 0.28621449210043715,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 0.29797242294497445,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 0.35273792533611786,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 0.35273792533611786,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 0.35273792533611786,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 0.35273792533611786,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 0.35273792533611786,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 0.29728458399056906,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 0.3478361039237202,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 0.3372984709197817,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 0.33729847091978177,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 0.33729847091978177,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 0.33729847091978177,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 0.33729847091978177,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 0.33729847091978177,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 0.33435706639055635,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 0.32278853062200563,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 0.32278853062200563,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 0.32278853062200563,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 0.32278853062200563,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 0.32278853062200563,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 0.32278853062200563,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 0.33101345529263226,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 0.35600323349218455,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 0.35600323349218455,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 0.35600323349218455,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 0.35600323349218455,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 0.35600323349218455,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 0.35600323349218455,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 0.3668293961534675,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 0.3544824214409392,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 0.3544824214409392,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 0.3544824214409392,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 0.3544824214409392,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 0.3544824214409392,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 0.3544824214409392,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 0.3544824214409392,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 0.3544824214409392,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 0.3673469387755141,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 0.30136989795918695,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 639.1186507804854,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 639.1186507804854,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 471.0634446764021,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 471.0634446764021,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 471.0634446764021,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 471.0634446764021,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 471.0634446764021,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 471.0634446764021,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 282.04767664899526,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 235.90617642980462,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 235.90617642980462,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 235.90617642980462,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 235.90617642980462,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 235.90617642980462,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 235.90617642980462,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 235.90617642980462,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 235.90617642980462,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 89.06241235803452,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 79.43959448045283,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 79.43959448045283,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 79.43959448045283,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 79.43959448045283,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 79.43959448045283,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 23.354311338071486,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 38.325689104718606,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 38.325689104718606,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 38.325689104718606,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 38.325689104718606,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 38.325689104718606,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 38.325689104718606,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 38.325689104718606,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 38.325689104718606,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 51.64391015507984,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 42.74781626494938,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 60.8297016293245,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 60.8297016293245,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 60.8297016293245,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 60.8297016293245,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 60.8297016293245,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 63.50523848218295,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 66.07051073134458,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 76.95816747484882,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 76.95816747484882,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 76.95816747484882,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 76.95816747484882,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 76.95816747484882,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 76.95816747484882,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 75.89889869348697,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 75.54793866973522,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 75.54793866973522,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 75.54793866973522,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 75.54793866973522,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 75.54793866973522,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 75.54793866973522,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 60.60432419242102,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 51.5509750000092,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 60.892852273467774,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 76.455041824115,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 76.455041824115,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 76.45504182411501,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 76.45504182411501,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 76.45504182411501,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 76.45504182411501,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 76.45504182411501,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 76.12202170158291,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 76.12202170158291,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 62.12730518683731,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 894.5525383172102,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 894.5525383172102,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 894.5525383172102,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 697.8737276479636,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 697.8737276479636,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 697.8737276479636,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 697.8737276479636,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 697.8737276479636,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 625.327653538595,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 625.327653538595,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 625.327653538595,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 522.1081717996741,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 522.1081717996741,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 522.1081717996741,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 522.1081717996741,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 522.1081717996741,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 443.5816524605259,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 364.01682003522177,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 364.01682003522177,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 364.01682003522177,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 364.01682003522177,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 364.01682003522177,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 305.48649192822944,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 305.48649192822944,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 305.48649192822944,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 184.2066188011356,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 215.0780916637493,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 215.0780916637493,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 215.0780916637493,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 183.0607989964061,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 183.0607989964061,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 183.0607989964061,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 183.0607989964061,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 146.04629320626705,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 146.04629320626705,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 146.04629320626705,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 146.04629320626705,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 123.41804281054715,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 58.23177499987651,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 58.23177499987651,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 67.29417420100853,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 64.24003343055372,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 92.68266247841721,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 92.68266247841721,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 92.68266247841721,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 92.68266247841721,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 92.68266247841721,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 93.20174580459654,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 93.20174580459654,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 92.33936685837205,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 92.33936685837205,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 92.33936685837205,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 92.37787382021105,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 92.37787382021105,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 92.37787382021105,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 93.41832261543409,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 93.41832261543409,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 93.41832261543409,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 93.41832261543409,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 62.91945369755697,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 66.02342576045868,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 69.12739782336038,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 59.66377500008094,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 59.66377500008094,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 59.66377500008094,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 71.23965081216501,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 68.13567874926328,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 477.6325777282378,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 477.6325777282378,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 477.6325777282378,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 477.6325777282378,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 477.6325777282378,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 477.6325777282378,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 477.6325777282378,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 212.56641732668322,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 25.373950981659064,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 25.373950981659064,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 25.373950981659064,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 25.373950981659064,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 25.373950981659064,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 25.373950981659064,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 25.373950981659064,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 25.373950981659064,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 39.45385454476263,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 39.45385454476263,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 45.71294214416862,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 45.71294214416862,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 45.71294214416862,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 45.71294214416862,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 45.71294214416862,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 45.71294214416862,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 45.71294214416863,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 45.71294214416863,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 54.777153490396564,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 54.777153490396564,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 72.05974105697658,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 72.05974105697658,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 72.05974105697658,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 72.05974105697658,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 72.34599506252009,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 72.34599506252009,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 72.34599506252009,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 72.34599506252009,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 72.34599506252009,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 72.34599506252009,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 72.63708516021795,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 72.1248431756947,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 72.1248431756947,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 72.1248431756947,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 72.1248431756947,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 72.1248431756947,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 72.1248431756947,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 72.1248431756947,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 59.09295081839998,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 61.524984682375035,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 72.96101591925175,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 72.96101591925175,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 72.96101591925175,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 72.96101591925175,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 72.96101591925175,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 72.96101591925175,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 61.12248307788716,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 58.6904492139121,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 56.59719523277044,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 54.16823530689728,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    }
+  ],
+  "memory": [
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 37.68359375,
+      "container": "httpbin-app",
+      "pod": "unknown",
+      "label": "httpbin-app (httpbin-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 94.45703125,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 94.45703125,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 93.7890625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 93.7890625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 93.7890625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 93.7890625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 93.7890625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 93.7890625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 93.7890625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 95.0390625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 95.1484375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 95.15234375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 95.15234375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 95.15234375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 95.15234375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 95.15234375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 94.9140625,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 94.98046875,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 95.34375,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 1173.328125,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 1173.328125,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 1173.328125,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 48.08203125,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 48.08203125,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 48.08203125,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 48.08203125,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 48.08203125,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 2.09375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 535.3359375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 535.3359375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 535.3359375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 535.3359375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 535.3359375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 568.83984375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 568.83984375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 568.83984375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 568.83984375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 568.83984375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 568.83984375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 568.83984375,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 607.140625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 681.9296875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 681.9296875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 681.9296875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 681.9296875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 681.9296875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 681.9296875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 681.9296875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 718.171875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 718.171875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 718.171875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 718.171875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 718.171875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 718.171875,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 726.0390625,
+      "container": "k6-app",
+      "pod": "unknown",
+      "label": "k6-app (k6-app)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 82.36328125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 82.36328125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 82.36328125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 82.36328125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 82.36328125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 82.36328125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 82.36328125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 82.44140625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 82.078125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 82.078125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 82.078125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 82.078125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 82.078125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 82.078125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 82.078125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 82.078125,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 82.3359375,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 82.35546875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 82.35546875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 82.35546875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 82.35546875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 82.35546875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 82.35546875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 82.1171875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 82.1171875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 82.1171875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 82.1171875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 82.1171875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 82.1171875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 82.1171875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 82.3671875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 82.3671875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 82.3671875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 82.3671875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 82.3671875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 82.3671875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 82.3671875,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 82.6640625,
+      "container": "k6-proxy",
+      "pod": "unknown",
+      "label": "k6-proxy (k6-proxy)"
+    }
+  ],
+  "tls_handshake_rate": [
+    {
+      "timestamp": "2026-09-18 04:29:01",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:03",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:05",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:07",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:09",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:11",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:13",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:15",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:17",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:19",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:21",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:23",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:25",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:27",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:29",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:31",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:33",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:35",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:37",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:39",
+      "value": 0.0,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:41",
+      "value": 13.438348240110356,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:43",
+      "value": 13.438348240110356,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:45",
+      "value": 13.438348240110356,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:47",
+      "value": 13.438348240110356,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:49",
+      "value": 13.438348240110356,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:51",
+      "value": 13.438348240110356,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:53",
+      "value": 13.438348240110356,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:55",
+      "value": 30.110300658245865,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:57",
+      "value": 30.110300658245865,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:29:59",
+      "value": 30.110300658245865,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:01",
+      "value": 30.110300658245865,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:03",
+      "value": 30.110300658245865,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:05",
+      "value": 30.110300658245865,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:07",
+      "value": 30.110300658245865,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:09",
+      "value": 30.110300658245865,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:11",
+      "value": 46.81589604378978,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:13",
+      "value": 46.81589604378978,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:15",
+      "value": 46.81589604378978,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:17",
+      "value": 46.81589604378978,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:19",
+      "value": 46.81589604378978,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:21",
+      "value": 46.81589604378978,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:23",
+      "value": 46.81589604378978,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:25",
+      "value": 50.02779321845469,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:27",
+      "value": 50.02779321845469,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:29",
+      "value": 50.02779321845469,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:31",
+      "value": 50.02779321845469,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:33",
+      "value": 50.02779321845469,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:35",
+      "value": 50.02779321845469,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:37",
+      "value": 50.02779321845469,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:39",
+      "value": 50.02779321845469,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:41",
+      "value": 50.05450379301906,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:43",
+      "value": 50.05450379301906,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:45",
+      "value": 50.05450379301906,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:47",
+      "value": 50.05450379301906,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:49",
+      "value": 50.05450379301906,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:51",
+      "value": 50.05450379301906,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:53",
+      "value": 50.05450379301906,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:55",
+      "value": 50.02556862396336,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:57",
+      "value": 50.02556862396336,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:30:59",
+      "value": 50.02556862396336,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:01",
+      "value": 50.02556862396336,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:03",
+      "value": 50.02556862396336,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:05",
+      "value": 50.02556862396336,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:07",
+      "value": 50.02556862396336,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:09",
+      "value": 50.02556862396336,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:11",
+      "value": 50.0400320256205,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    },
+    {
+      "timestamp": "2026-09-18 04:31:13",
+      "value": 41.079530290899385,
+      "container": "httpbin-proxy",
+      "pod": "unknown",
+      "label": "httpbin-proxy (httpbin-proxy)"
+    }
+  ],
+  "window": {
+    "start": "2026-09-18T04:29:16Z",
+    "end": "2026-09-18T04:30:58Z"
+  }
+}
