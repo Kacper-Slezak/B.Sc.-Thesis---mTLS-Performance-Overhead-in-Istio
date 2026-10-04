@@ -57,7 +57,8 @@ import random
 import re
 import statistics
 from collections import defaultdict
-from math import erf, sqrt
+from itertools import combinations
+from math import comb, erf, sqrt
 from pathlib import Path
 
 
@@ -117,27 +118,69 @@ def bootstrap_ci(values, n_boot=5000, ci=0.95, seed=42):
     return means[lo_idx], means[hi_idx]
 
 
-def mann_whitney_u(a, b):
-    """Test U Manna-Whitneya (dwustronny, przyblizenie normalne dla p-value).
-    Nieparametryczny odpowiednik testu t - nie zaklada rozkladu normalnego,
-    co ma sens przy n=3-5 probek na grupe, jak w tym projekcie."""
-    combined = sorted([(v, "a") for v in a] + [(v, "b") for v in b])
-    ranks = {}
+def _rank_array(values):
+    """Nadaje wartosciom rangi (srednia ranga przy remisach - standardowe
+    podejscie w testach nieparametrycznych). Zwraca liste rang W TEJ SAMEJ
+    kolejnosci, w jakiej podano `values`."""
+    order = sorted(range(len(values)), key=lambda i: values[i])
+    ranks = [0.0] * len(values)
     i = 0
-    n = len(combined)
+    n = len(values)
     while i < n:
         j = i
-        while j < n and combined[j][0] == combined[i][0]:
+        while j < n and values[order[j]] == values[order[i]]:
             j += 1
         avg_rank = (i + 1 + j) / 2
         for k in range(i, j):
-            ranks[k] = avg_rank
+            ranks[order[k]] = avg_rank
         i = j
-    rank_a = sum(ranks[idx] for idx, (v, g) in enumerate(combined) if g == "a")
+    return ranks
+
+
+def mann_whitney_u(a, b, exact_limit=100_000):
+    """Test U Manna-Whitneya (dwustronny).
+
+    WAZNE - dlaczego dokladny test permutacyjny, a nie przyblizenie normalne:
+    Przy malych probach (typowe dla tego projektu: n=3-5 na grupe)
+    przyblizenie normalne jest niewiarygodne. Przyklad: dla n1=n2=3 istnieje
+    tylko C(6,3)=20 mozliwych podzialow proby pod hipoteza zerowa.
+    "Idealne rozdzielenie" grup (U=0) odpowiada dokladnie 2 z tych 20
+    podzialow, wiec PRAWDZIWE p-value w takim przypadku to 2/20 = 0.1.
+    Przyblizenie normalne dawalo w tej samej sytuacji p~=0.0495 (czyli
+    zaokraglone "0.050") - SYSTEMATYCZNIE ponizej progu istotnosci 0.05,
+    mimo ze dokladny test nigdy nie powinien tam zejsc przy n=3 na grupe.
+    Innymi slowy: przy n=3 nie da sie w ogole wykazac istotnosci na
+    poziomie 0.05 tym testem - a stara wersja skryptu twierdzila inaczej.
+
+    Ponizej liczymy DOKLADNY rozklad permutacyjny (enumerujemy wszystkie
+    mozliwe podzialy polaczonej proby na grupy o rozmiarach n1 i n2), co
+    przy takich n jest trywialne obliczeniowo. Dla wiekszych prob (gdyby
+    n1+n2 kiedys wzroslo tak, ze liczba podzialow przekroczy `exact_limit`)
+    wracamy do przyblizenia normalnego jako rozsadnego kompromisu."""
     n1, n2 = len(a), len(b)
-    u1 = rank_a - n1 * (n1 + 1) / 2
+    n = n1 + n2
+    combined = list(a) + list(b)
+    ranks = _rank_array(combined)
+    rank_sum_a = sum(ranks[:n1])
+
+    u1 = rank_sum_a - n1 * (n1 + 1) / 2
     u2 = n1 * n2 - u1
     u = min(u1, u2)
+
+    total_combos = comb(n, n1)
+
+    if total_combos <= exact_limit:
+        mu = n1 * (n + 1) / 2  # oczekiwana suma rang grupy A pod H0
+        observed_extremity = abs(rank_sum_a - mu)
+        extreme_count = 0
+        for combo_idx in combinations(range(n), n1):
+            s = sum(ranks[i] for i in combo_idx)
+            if abs(s - mu) >= observed_extremity - 1e-9:
+                extreme_count += 1
+        p = extreme_count / total_combos
+        return u, min(p, 1.0)
+
+    # Fallback dla duzych prob (w tym projekcie w praktyce nieuzywany).
     mu = n1 * n2 / 2
     sigma = ((n1 * n2 * (n1 + n2 + 1)) / 12) ** 0.5
     if sigma == 0:
@@ -163,19 +206,31 @@ def detect_outliers(values, z_thresh=2.0):
 # WCZYTYWANIE WYNIKOW WYDAJNOSCIOWYCH (summary_*.json + metrics_*.json)
 # ---------------------------------------------------------------------------
 
+def _parse_ts(ts: str):
+    """Parsuje znacznik czasu do obiektu datetime (naiwny, zakladamy UTC
+    wszedzie w tym projekcie, bo run_all_test_v2.sh generuje czas przez
+    `date -u`). W plikach metrics_*.json wystepuja W TYM SAMYM PLIKU DWA
+    RoZNE formaty tego samego czasu - potwierdzone empirycznie:
+      - 'window.start' / 'window.end':  '2026-09-20T18:47:00Z'  (ISO, z T i Z)
+      - timestamp pojedynczej probki:   '2026-09-20 18:46:45'   (spacja, bez Z)
+    Poprzednia wersja porownywala te dwa formaty jako zwykle stringi, co
+    ZAWSZE dawalo falszywy wynik "probka jest przed oknem testu" (spacja
+    0x20 < 'T' 0x54 w porownaniu leksykograficznym) - stad kolumny CPU/RAM
+    byly zawsze puste. Tutaj obie postaci sprowadzamy do jednego formatu
+    przed porownaniem."""
+    ts = ts.strip()
+    if ts.endswith("Z"):
+        ts = ts[:-1]
+    ts = ts.replace("T", " ")
+    from datetime import datetime
+    return datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
+
+
 def read_container_metric(metrics_path: Path, metric_type: str, container: str):
     """Czyta metrics_*.json i zwraca srednia wartosc danej metryki
     (np. 'cpu' albo 'memory') dla wskazanego kontenera, tylko z probek
     miesczacych sie w oknie czasowym testu ('window.start'..'window.end').
-    Zwraca None, jesli plik nie istnieje albo nie ma pasujacych danych.
-
-    Porownanie znacznikow czasu jest tu CZYSTO TEKSTOWE (string <= string).
-    Dziala to poprawnie TYLKO jesli wszystkie znaczniki (window.start/end
-    ORAZ timestamp kazdej probki) sa zapisane w tym samym, spojnym formacie
-    ISO-8601 UTC, np. "2026-09-20T10:15:00Z" - tak jak START_TIME/END_TIME
-    w run_all_test_v2.sh (generowane przez `date -u`). Jesli fetch_and_plot.py
-    zapisuje znaczniki inaczej, ta funkcja da bledne wyniki bez ostrzezenia -
-    warto to zweryfikowac jednym przykladowym plikiem metrics_*.json."""
+    Zwraca None, jesli plik nie istnieje albo nie ma pasujacych danych."""
     if not metrics_path.exists():
         return None
     try:
@@ -185,15 +240,21 @@ def read_container_metric(metrics_path: Path, metric_type: str, container: str):
 
     points = data.get(metric_type, [])
     window = data.get("window", {})
-    w_start = window.get("start")
-    w_end = window.get("end")
+    w_start_raw = window.get("start")
+    w_end_raw = window.get("end")
+    w_start = _parse_ts(w_start_raw) if w_start_raw else None
+    w_end = _parse_ts(w_end_raw) if w_end_raw else None
 
     vals = []
     for p in points:
         if p.get("container") != container:
             continue
-        ts = p.get("timestamp")
-        if w_start and w_end and ts:
+        ts_raw = p.get("timestamp")
+        if w_start is not None and w_end is not None and ts_raw:
+            try:
+                ts = _parse_ts(ts_raw)
+            except ValueError:
+                continue  # nierozpoznany format - pomijamy probke, nie caly plik
             if not (w_start <= ts <= w_end):
                 continue
         vals.append(p["value"])
