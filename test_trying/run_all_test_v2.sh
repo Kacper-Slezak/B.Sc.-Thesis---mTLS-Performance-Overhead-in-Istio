@@ -4,6 +4,17 @@ set -e
 # ==========================================
 # GŁÓWNA BATERIA TESTÓW DO PRACY DYPLOMOWEJ
 # ==========================================
+# Ensure execution always occurs from the repository root
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_ROOT"
+
+# Detect Python interpreter (use venv if available)
+if [ -f "./.venv/bin/python3" ]; then
+  PYTHON_BIN="./.venv/bin/python3"
+else
+  PYTHON_BIN="python3"
+fi
+
 N_RUNS="${N_RUNS:-5}"
 if [ "$N_RUNS" -lt 3 ]; then
   echo "UWAGA: N_RUNS=$N_RUNS < 3. Ponizej 3 powtorzen stats_compare.py"
@@ -16,7 +27,7 @@ export HANDSHAKE_RATE="${HANDSHAKE_RATE:-50}"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
 echo "Archiving previous test results if they exist..."
-python3 ./05_analitics/archive_results.py || echo "Warning: Archiving failed, proceeding anyway."
+$PYTHON_BIN ./05_analitics/archive_results.py || echo "Warning: Archiving failed, proceeding anyway."
 
 echo "Creating result directories..."
 mkdir -p ./04_results/Summary
@@ -139,7 +150,7 @@ run_test_profile() {
   read -r HS_SUM_BEFORE HS_COUNT_BEFORE <<< "$(get_ssl_handshake_sum_count "$CURRENT_HTTPBIN_POD")"
 
   kubectl exec $K6_POD -c k6 -- rm -f /tmp/raw.json /tmp/summary.json || true
-  cat ./03_test_scripts/main_k6_scenarios_3.js | kubectl exec -i $K6_POD -c k6 -- k6 run \
+  cat ./03_test_scripts/main_k6_scenarios.js | kubectl exec -i $K6_POD -c k6 -- k6 run \
     -e TEST_TYPE=${TEST_TYPE} \
     -e DISABLE_KEEP_ALIVE=${DISABLE_KEEP_ALIVE} \
     -e PAYLOAD_SIZE_KB=${PAYLOAD_SIZE_KB:-5000} \
@@ -173,7 +184,7 @@ run_test_profile() {
   kubectl exec $K6_POD -c k6 -- rm -f /tmp/raw.json /tmp/summary.json
 
   echo "Fetching metrics from Prometheus and generating plots..."
-  python3 ./05_analitics/fetch_and_plot.py --start "$START_TIME" --end "$END_TIME" --setup "$SETUP_NAME" --test-type "$TEST_TYPE" --prefix "$FILE_PREFIX" || echo "Warning: Fetch failed."
+  $PYTHON_BIN ./05_analitics/fetch_and_plot.py --start "$START_TIME" --end "$END_TIME" --setup "$SETUP_NAME" --test-type "$TEST_TYPE" --prefix "$FILE_PREFIX" || echo "Warning: Fetch failed."
   export_grafana_panels "$FILE_PREFIX" "$START_TIME" "$END_TIME"
   
   sleep 5
@@ -338,8 +349,8 @@ echo "Resetting EnvoyFilters to clean state..."
 kubectl delete envoyfilter --all -n default 2>/dev/null || true
 
 echo "Generating comparison reports..."
-python3 ./05_analitics/compare_results.py || echo "Warning: compare_results failed."
-python3 ./05_analitics/stats_compare.py --results-dir ./04_results/Summary --baseline plaintext \
+$PYTHON_BIN ./05_analitics/compare_results.py || echo "Warning: compare_results failed."
+$PYTHON_BIN ./05_analitics/stats_compare.py --results-dir ./04_results/Summary --baseline plaintext \
   | tee "./04_results/Summary/stats_compare_${TIMESTAMP}.txt" || true
 
 echo "=== ALL TESTS COMPLETED SUCCESSFULLY ==="

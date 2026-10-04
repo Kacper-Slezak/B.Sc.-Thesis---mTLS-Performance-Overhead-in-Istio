@@ -1,1 +1,0 @@
-01_scripts/diag_mesh.sh

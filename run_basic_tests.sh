@@ -1,1 +1,0 @@
-run_test_basic.sh

@@ -33,18 +33,20 @@ The benchmarks evaluate cryptographic overhead across two orthogonal axes: **Inf
 2. **Verify Cryptographic Negotiation:**
    Execute live telemetry verification across all configurations:
    ```bash
-   ./verify_ciphers.sh
+   ./01_scripts/verify_ciphers.sh
    ```
    Ensures Envoy proxy instances correctly negotiate the specified ciphers and curves before conducting performance runs.
 
 3. **Execute Benchmark Battery:**
-   Run the automated test runner (with randomized test ordering to avoid thermal or temporal bias):
+   Run the official basic benchmark suite (randomized setups):
    ```bash
-   N_RUNS=5 ./run_all_tests.sh
+   N_RUNS=5 ./run_basic_test.sh
    ```
-   Or execute the end-to-end pipeline:
+   Or execute the full exploratory test suite:
    ```bash
-   ./start.sh
+   ./test_trying/start.sh
+   # or:
+   N_RUNS=3 ./test_trying/run_all_test_v2.sh
    ```
 
 ---

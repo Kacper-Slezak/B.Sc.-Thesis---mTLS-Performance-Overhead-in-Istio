@@ -7,6 +7,10 @@
 # ==============================================================================
 set -e
 
+# Ensure execution always occurs from the repository root
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_ROOT"
+
 echo "======================================================"
 echo "🔍 DIAGNOSTIC RUN: No-KeepAlive mTLS CPU Profiling"
 echo "======================================================"

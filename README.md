@@ -4,7 +4,9 @@
 
 All scripts and results are organized systematically as follows:
 
-* `00_journal/` - Research journal and empirical experiment observations (e.g. ML-KEM enforcement analysis).
+* `run_basic_test.sh` - Główna, oficjalna bateria testów podstawowych dla pracy dyplomowej (izolacja narzutu Keep-Alive vs No-KeepAlive dla wszystkich konfiguracji kryptograficznych).
+* `test_trying/` - Eksploracyjne baterie testów (pełne 6 scenariuszy obciążeniowych w `run_all_test_v2.sh`, pipeline `start.sh`, archiwalne wersje próbne).
+* `00_journal/` - Research journal, empirical experiment observations (e.g. ML-KEM enforcement analysis), and thesis outline notes.
 * `01_scripts/` - Bash scripts automating cluster provisioning (`setup_cluster.sh`), cipher verification (`verify_ciphers.sh`), mesh diagnostics (`diag_mesh.sh`, `diag_envoyfilter_config.sh`), and PQC scans (`run_pqc_test.sh`, `reproduce_pqc_failure.sh`).
 * `02_manifests/` - Kubernetes and Istio configurations (EnvoyFilters forcing specific ciphers, DestinationRules disabling keep-alive).
 * `03_test_scripts/` - Load testing scenarios for K6 (`main_k6_scenarios.js` covering baseline, payload, stress, and handshake profiles).
@@ -20,13 +22,17 @@ To reproduce the research from scratch:
 3. Run the complete automated workflow or individual phases:
 
    ```bash
-   # Complete end-to-end workflow:
-   ./start.sh
-   
-   # Or run individual phases:
+   # Phase 1: Cluster & Mesh Provisioning
    ./01_scripts/setup_cluster.sh
-   ./verify_ciphers.sh
-   N_RUNS=5 ./run_all_tests.sh
+   
+   # Phase 2: Cipher & Curve Verification
+   ./01_scripts/verify_ciphers.sh
+   
+   # Phase 3: Core Thesis Benchmarks (Baseline Keep-Alive vs No-KeepAlive)
+   N_RUNS=5 ./run_basic_test.sh
+   
+   # (Optional) Full Exploratory Test Battery (Stress, Payload, Handshake trials)
+   N_RUNS=3 ./test_trying/run_all_test_v2.sh
    ```
 
 4. Verify K6 client pod connectivity:

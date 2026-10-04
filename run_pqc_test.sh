@@ -1,1 +1,0 @@
-01_scripts/run_pqc_test.sh
