@@ -379,8 +379,6 @@ echo "Resetting EnvoyFilters to default clean state..."
 kubectl delete envoyfilter --all -n default 2>/dev/null || true
 
 echo "Generating comparison reports..."
-$PYTHON_BIN ./05_analytics/compare_results.py || echo "Warning: compare_results failed."
-$PYTHON_BIN ./05_analytics/stats_compare.py --results-dir ./04_results/Summary --metrics-dir ./04_results/Metrics --baseline plaintext \
-  | tee "./04_results/Summary/stats_compare_${TIMESTAMP}.md" || true
+$PYTHON_BIN ./05_analytics/simple_compare.py || echo "Warning: simple_compare failed."
 
 echo "Basic tests completed successfully."
