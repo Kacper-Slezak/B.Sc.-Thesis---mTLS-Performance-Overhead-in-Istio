@@ -31,7 +31,7 @@ fi
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
 echo "Archiving previous test results if they exist..."
-$PYTHON_BIN ./05_analitics/archive_results.py || echo "Warning: Archiving failed, proceeding anyway."
+$PYTHON_BIN ./05_analytics/archive_results.py || echo "Warning: Archiving failed, proceeding anyway."
 
 echo "Creating result directories..."
 mkdir -p ./04_results/Summary
@@ -193,7 +193,7 @@ run_test_profile() {
   kubectl exec $K6_POD -c k6 -- rm -f /tmp/raw.json /tmp/summary.json
 
   echo "Fetching metrics from Prometheus and generating plots..."
-  $PYTHON_BIN ./05_analitics/fetch_and_plot.py --start "$START_TIME" --end "$END_TIME" --setup "$SETUP_NAME" --test-type "$TEST_TYPE" --prefix "$FILE_PREFIX" || echo "Warning: Fetch failed."
+  $PYTHON_BIN ./05_analytics/fetch_and_plot.py --start "$START_TIME" --end "$END_TIME" --setup "$SETUP_NAME" --test-type "$TEST_TYPE" --prefix "$FILE_PREFIX" || echo "Warning: Fetch failed."
   export_grafana_panels "$FILE_PREFIX" "$START_TIME" "$END_TIME"
   
   sleep 5
@@ -373,8 +373,8 @@ echo "Resetting EnvoyFilters to clean state..."
 kubectl delete envoyfilter --all -n default 2>/dev/null || true
 
 echo "Generating comparison reports..."
-$PYTHON_BIN ./05_analitics/compare_results.py || echo "Warning: compare_results failed."
-$PYTHON_BIN ./05_analitics/stats_compare.py --results-dir ./04_results/Summary --metrics-dir ./04_results/Metrics --baseline plaintext \
+$PYTHON_BIN ./05_analytics/compare_results.py || echo "Warning: compare_results failed."
+$PYTHON_BIN ./05_analytics/stats_compare.py --results-dir ./04_results/Summary --metrics-dir ./04_results/Metrics --baseline plaintext \
   | tee "./04_results/Summary/stats_compare_${TIMESTAMP}.md" || true
 
 echo "=== BASIC TESTS COMPLETED SUCCESSFULLY ==="

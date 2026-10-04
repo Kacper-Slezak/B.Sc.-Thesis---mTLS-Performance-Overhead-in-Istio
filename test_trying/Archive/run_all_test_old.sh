@@ -25,7 +25,7 @@ export HANDSHAKE_RATE="${HANDSHAKE_RATE:-50}"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
 echo "Archiving previous test results if they exist..."
-python3 ./05_analitics/archive_results.py || echo "Warning: Archiving failed, proceeding anyway."
+python3 ./05_analytics/archive_results.py || echo "Warning: Archiving failed, proceeding anyway."
 
 echo "Creating result directories..."
 mkdir -p ./04_results/Summary
@@ -207,7 +207,7 @@ run_test_profile() {
 
   echo "Fetching metrics from Prometheus and generating plots..."
   local ANALYTICS_START=$(date +%s)
-  python3 ./05_analitics/fetch_and_plot.py --start "$START_TIME" --end "$END_TIME" --setup "$SETUP_NAME" --test-type "$TEST_TYPE" --prefix "$FILE_PREFIX" || echo "Warning: Failed to fetch metrics or plot them."
+  python3 ./05_analytics/fetch_and_plot.py --start "$START_TIME" --end "$END_TIME" --setup "$SETUP_NAME" --test-type "$TEST_TYPE" --prefix "$FILE_PREFIX" || echo "Warning: Failed to fetch metrics or plot them."
   local ANALYTICS_END=$(date +%s)
   echo "Analytics step took $((ANALYTICS_END - ANALYTICS_START))s."
 
@@ -434,10 +434,10 @@ echo "Resetting EnvoyFilters to clean state..."
 kubectl delete envoyfilter --all -n default 2>/dev/null || true
 
 echo "Generating comparison report (stary, opisowy raport na podstawie ostatniego runa)..."
-python3 ./05_analitics/compare_results.py || echo "Warning: Failed to generate comparison report."
+python3 ./05_analytics/compare_results.py || echo "Warning: Failed to generate comparison report."
 
 echo "Generating STATISTICAL comparison across all ${N_RUNS} repetitions..."
-python3 ./05_analitics/stats_compare.py --results-dir ./04_results/Summary --baseline mtls1.3-default \
+python3 ./05_analytics/stats_compare.py --results-dir ./04_results/Summary --baseline mtls1.3-default \
   | tee "./04_results/Summary/stats_compare_${TIMESTAMP}.txt" \
   || echo "Warning: Failed to generate statistical comparison report."
 

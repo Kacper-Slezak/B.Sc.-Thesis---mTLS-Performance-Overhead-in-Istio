@@ -31,9 +31,9 @@ N_RUNS=3 ./test_trying/run_all_test_v2.sh
 
 echo "--- Generating performance comparison report ---"
 if [ -f "./.venv/bin/python3" ]; then
-  ./.venv/bin/python3 ./05_analitics/compare_results.py
+  ./.venv/bin/python3 ./05_analytics/compare_results.py
 else
-  python3 ./05_analitics/compare_results.py
+  python3 ./05_analytics/compare_results.py
 fi
 
 # ==========================================
