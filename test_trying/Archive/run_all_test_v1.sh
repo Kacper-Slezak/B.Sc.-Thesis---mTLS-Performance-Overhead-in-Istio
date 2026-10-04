@@ -116,8 +116,7 @@ run_test_profile() {
   if [ "$DISABLE_KEEP_ALIVE" = "true" ]; then
     FILE_SUFFIX="-nokeepalive"
   fi
-  # PATCH: run{N} w nazwie pliku - to na tym opiera sie stats_compare.py
-  # zeby pogrupowac powtorzenia tego samego (setup, scenariusz).
+  # run{N} in filename - used by stats_compare.py to group repetitions
   local FILE_PREFIX="${SETUP_NAME}_${TEST_TYPE}${FILE_SUFFIX}_run${RUN_IDX}_${TIMESTAMP}"
 
   echo "========================================================================"
@@ -127,7 +126,7 @@ run_test_profile() {
   else
     echo "Keep-Alive: ON (Keep-Alive)"
   fi
-  echo "Setup: [${SETUP_NAME}] | Powtorzenie: [${RUN_IDX}/${N_RUNS}]"
+  echo "Setup: [${SETUP_NAME}] | Run: [${RUN_IDX}/${N_RUNS}]"
   echo "========================================================================"
 
   local START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -361,11 +360,11 @@ EOF
 # ==========================================
 SETUPS=("mtls1.3-default" "mtls1.2-gcm" "mtls1.2-chacha" "mtls1.2-cbc" "mtls1.3-postquantum")
 
-# Losowe tasowanie elementów tablicy przy użyciu shuf
+# Randomly shuffle array elements using shuf
 SHUFFLED_SETUPS=($(printf "%s\n" "${SETUPS[@]}" | shuf))
 
 echo "========================================================================"
-echo "🎯 EXECUTION PLAN (Randomized to avoid systematic/thermal bias):"
+echo "EXECUTION PLAN (Randomized to avoid systematic/thermal bias):"
 for i in "${!SHUFFLED_SETUPS[@]}"; do
   echo "  $((i+1)). ${SHUFFLED_SETUPS[$i]}"
 done
@@ -391,7 +390,7 @@ done
 echo "Resetting EnvoyFilters to clean state..."
 kubectl delete envoyfilter --all -n default 2>/dev/null || true
 
-echo "Generating comparison report (stary, opisowy raport na podstawie ostatniego runa)..."
+echo "Generating comparison report..."
 python3 ./05_analytics/compare_results.py || echo "Warning: Failed to generate comparison report."
 
 echo "Generating STATISTICAL comparison across all ${N_RUNS} repetitions..."

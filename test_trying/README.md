@@ -1,20 +1,19 @@
-# Test Trying (Eksploracyjne Baterie Testów i Próby Obciążeniowe)
+# Exploratory Benchmarks and Test Trials (`test_trying/`)
 
-Katalog ten gromadzi **pełne baterie testów obciążeniowych, skrypty eksploracyjne oraz wcześniejsze wersje próbne (test trials)**, które stanowiły etap badawczy przed wyodrębnieniem kluczowej dla pracy dyplomowej baterii testów podstawowych.
+This directory contains full benchmark batteries, exploratory load testing scripts, and historical test trials developed during the research project prior to isolating the core baseline thesis benchmark suite.
 
-> [!NOTE]
-> Główną, oficjalną baterią testów podstawowych pracy dyplomowej jest **[`run_basic_test.sh`](../run_basic_test.sh)** znajdujący się w głównym katalogu projektu.
+Note: The official benchmark suite for the thesis is [`run_basic_test.sh`](../run_basic_test.sh) located in the project root directory.
 
 ---
 
-## Zawartość katalogu
+## Directory Contents
 
-### 1. Skrypty testowe i pipeline'y
-* **`run_all_test_v2.sh`** (oraz aliasy `run_all_test.sh`, `run_all_tests.sh`) – Pełna, zautomatyzowana bateria 6 profili obciążeniowych (`baseline`, `baseline-nokeepalive`, `payload`, `payload-nokeepalive`, `stress`, `handshake-nokeepalive`) testująca wszystkie konfiguracje kryptograficzne (Plaintext, mTLS 1.3 default, mTLS 1.2 GCM/GCM256/ChaCha/CBC, mTLS 1.3 PQC).
-* **`start.sh`** – Pełny skrypt end-to-end: inicjalizacja klastra (`01_scripts/setup_cluster.sh`), oczekiwanie na pody, uruchomienie `run_all_test_v2.sh`, wygenerowanie raportów i uruchomienie wizualizacji w Grafanie.
-* **`test.sh`** – Diagnostyczny skrypt profilowania CPU sidecara Envoy przy wyłączonym Keep-Alive (wymuszenie ciągłego nawiązywania połączeń mTLS 1.2).
+### 1. Test Scripts and Pipelines
+* `run_all_test_v2.sh` (with aliases `run_all_test.sh`, `run_all_tests.sh`): Full automated benchmark suite covering 6 load profiles (`baseline`, `baseline-nokeepalive`, `payload`, `payload-nokeepalive`, `stress`, `handshake-nokeepalive`) across all cryptographic configurations (Plaintext, mTLS 1.3 default, mTLS 1.2 GCM/GCM256/ChaCha/CBC, mTLS 1.3 PQC).
+* `start.sh`: End-to-end exploratory pipeline script that provisions the cluster (`01_scripts/setup_cluster.sh`), waits for pods, executes `run_all_test_v2.sh`, generates reports, and opens Grafana.
+* `test.sh`: Diagnostic CPU profiling script for Envoy sidecars with Keep-Alive disabled (forcing repeated TLS 1.2 handshakes).
 
-### 2. Archiwum starszych wersji (`Archive/`)
-* **`run_all_test_v1.sh`** – Wcześniejsza wersja pełnej baterii testowej (wrzesień 2026).
-* **`run_all_test_old.sh`** – Pierwotna implementacja sekwencyjnego uruchamiania testów obciążeniowych.
-* **`one_liner.sh`** – Wczesny skrypt pomocniczy do szybkiego odpalania testów.
+### 2. Archived Versions (`Archive/`)
+* `run_all_test_v1.sh`: Earlier revision of the comprehensive test battery.
+* `run_all_test_old.sh`: Initial sequential benchmark runner implementation.
+* `one_liner.sh`: Early convenience script for testing.

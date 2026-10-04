@@ -11,9 +11,7 @@ set -e
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-echo "======================================================"
-echo "🔍 DIAGNOSTIC RUN: No-KeepAlive mTLS CPU Profiling"
-echo "======================================================"
+echo "DIAGNOSTIC RUN: No-KeepAlive mTLS CPU Profiling"
 
 K6_POD=$(kubectl get pods -l app=k6 -o jsonpath="{.items[0].metadata.name}")
 HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}")

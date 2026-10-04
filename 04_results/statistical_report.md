@@ -16,7 +16,7 @@
 | **plaintext** | 5 | 2806.7 | [2654.9, 2958.6] | 6.2% | 32.82 | 42.42 | n/a | **-- (baseline) --** |
 
 
-> ⚠️ **WARNING:** Setup `mtls1.2-gcm` has n=2 < 3. Insufficient runs for robust statistical analysis.
+> **WARNING:** Setup `mtls1.2-gcm` has n=2 < 3. Insufficient runs for robust statistical analysis.
 
 ---
 
@@ -32,7 +32,7 @@
 | **plaintext** | 5 | 2339.6 | [1870.8, 2674.4] | 19.6% | 39.76 | 50.93 | n/a | **-- (baseline) --** |
 
 
-> ⚠️ **WARNING:** Setup `mtls1.2-gcm` has n=2 < 3. Insufficient runs for robust statistical analysis.
+> **WARNING:** Setup `mtls1.2-gcm` has n=2 < 3. Insufficient runs for robust statistical analysis.
 
 ---
 
@@ -48,7 +48,7 @@
 | **plaintext** | 5 | 2614.9 | [2453.2, 2776.5] | 7.4% | 34.93 | 50.90 | n/a | **-- (baseline) --** |
 
 
-> ⚠️ **WARNING:** Setup `mtls1.2-gcm` has n=2 < 3. Insufficient runs for robust statistical analysis.
+> **WARNING:** Setup `mtls1.2-gcm` has n=2 < 3. Insufficient runs for robust statistical analysis.
 
 ---
 
@@ -90,6 +90,6 @@
 | **plaintext** | 5 | 2671.5 | [2553.8, 2785.2] | 5.1% | 169.06 | 237.99 | n/a | **-- (baseline) --** |
 
 
-> ⚠️ **WARNING:** Setup `mtls1.2-gcm` has n=2 < 3. Insufficient runs for robust statistical analysis.
+> **WARNING:** Setup `mtls1.2-gcm` has n=2 < 3. Insufficient runs for robust statistical analysis.
 
 ---

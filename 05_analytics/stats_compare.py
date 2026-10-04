@@ -1,54 +1,13 @@
 #!/usr/bin/env python3
 """
-stats_compare_v2.py
-====================
+stats_compare.py
+================
+Generates a statistical comparison report evaluating mTLS configuration
+performance (RPS, latency, proxy CPU, RAM) against a baseline setup,
+and verifies cipher/curve telemetry counter increments from Envoy admin stats.
 
-Generuje raport statystyczny porownujacy wydajnosc roznych konfiguracji
-mTLS (RPS, latency, CPU, RAM) wzgledem baseline'u, ORAZ osobno weryfikuje
-na podstawie plikow cipher_stats_*_before/after, czy w kazdym setupie
-faktycznie zanotowano wzrost licznika oczekiwanego szyfru/krzywej
-(ten sam pomysl co w verify_ciphers.sh, tylko automatycznie i dla kazdego
-pelnego przebiegu z osobna).
-
-DLACZEGO NOWA WERSJA, A NIE LATKA STAREJ:
-------------------------------------------
-1. Stara kolumna "TLS_hs mean(ms)" byla ZAWSZE n/a, bo liczyla sie z
-   licznika Envoya "ssl_handshake". Ten licznik jest typu COUNTER
-   (liczba zdarzen w czasie), a nie HISTOGRAM (rozklad czasu trwania) -
-   nie ma wiec z czego policzyc sredniego czasu w milisekundach.
-   Ten skrypt w ogole nie probuje juz tego robic z Envoy stats.
-
-2. Dla scenariuszy typu "handshake" najbardziej sensowna miara narzutu
-   TLS to LATENCY (avg_ms / p95_ms), a nie RPS - bo te scenariusze uzywaja
-   stalego tempa zapytan (constant-arrival-rate / HANDSHAKE_RATE), wiec
-   RPS jest z gory ograniczone i nie mowi nic o narzucie kryptograficznym.
-   Dlatego ten skrypt automatycznie przelacza metryke porownawcza w
-   zaleznosci od typu scenariusza - patrz funkcja comparison_metric_for().
-
-3. Doszlo CPU/RAM proxy z plikow metrics_*.json (ta sama logika co w
-   compare_results.py), zeby nie trzeba bylo patrzec w dwa oddzielne
-   raporty.
-
-4. Doszlo ostrzezenie, jesli w jednej grupie (setup, scenariusz) trafily
-   sie pliki z wiecej niz jednym znacznikiem czasu (TIMESTAMP) - to sygnal,
-   ze archiwizacja starych wynikow (archive_results.py) mogla sie kiedys
-   nie udac i w jednym "n" mieszamy wyniki z dwoch roznych przebiegow
-   (mozliwe, ze nawet z rozna wersja kodu/konfiguracji).
-
-Skrypt celowo NIE uzywa numpy/scipy - tylko biblioteki standardowej
-Pythona - zeby dalo sie latwo przejsc przez kazda linijke krok po kroku
-(np. na obronie pracy) bez odwolywania sie do "czarnej skrzynki".
-
-UWAGA - RZECZY DO RECZNEGO SPRAWDZENIA PRZED UZYCIEM:
-- Slownik CIPHER_EXPECTATIONS nizej zawiera nazwy szyfrow/krzywych
-  dopasowane do tego, co widac w logach verify_ciphers.sh - ale to
-  MUSISZ zweryfikowac wzgledem realnej tresci swoich plikow
-  envoyfilter_*.yaml, bo to nie jest odczytywane automatycznie z YAML-i.
-- read_container_metric() zaklada, ze znaczniki czasu w metrics_*.json
-  sa w formacie ISO-8601 UTC (jak START_TIME/END_TIME w
-  run_all_test_v2.sh, generowane przez `date -u`). Jesli fetch_and_plot.py
-  zapisuje je w innym formacie (np. epoch ms albo z offsetem strefy),
-  trzeba to ujednolicic - patrz komentarz przy tej funkcji.
+Implemented using only standard library modules to keep all calculations
+transparent and reproducible.
 """
 
 import argparse
@@ -62,28 +21,16 @@ from math import comb, erf, sqrt
 from pathlib import Path
 
 
-# ---------------------------------------------------------------------------
-# KONFIGURACJA - te rzeczy trzeba dopasowac do wlasnego projektu
-# ---------------------------------------------------------------------------
-
-# Wzorzec nazwy pliku podsumowania k6, zgodny z run_all_test_v2.sh:
-#   summary_{setup}_{scenario}[-nokeepalive]_run{N}_{TIMESTAMP}.json
+# Summary file name regex: summary_{setup}_{scenario}[-nokeepalive]_run{N}_{TIMESTAMP}.json
 FNAME_RE = re.compile(
     r"^summary_(?P<setup>.+?)_(?P<scenario>baseline|payload|stress|handshake)"
     r"(?P<suffix>-nokeepalive)?_run(?P<run>\d+)_(?P<timestamp>\d{8}_\d{6})\.json$"
 )
 
-# Nazwy kontenerow tak, jak sa zapisywane w metrics_*.json przez
-# fetch_and_plot.py. Jesli tam uzywacie innych etykiet - zmienic tutaj.
 PROXY_CONTAINER = "httpbin-proxy"
 APP_CONTAINER = "httpbin-app"
 
-# Czego oczekujemy w plikach cipher_stats_{setup}_before/after_*.txt dla
-# kazdego setupu. Klucz to nazwa setupu (taka jak w nazwach plikow),
-# wartosc to fragment nazwy licznika Envoya, ktory MUSI zanotowac wzrost.
-# UWAGA: dopasuj to do realnych nazw szyfrow/krzywych negocjowanych przez
-# Waszego Envoya (sprawdzone np. przez verify_ciphers.sh) - ponizej sa
-# wartosci widoczne w logach z tamtego skryptu.
+# Expected substrings in Envoy stats cipher/curve counters for each setup
 CIPHER_EXPECTATIONS = {
     "mtls1.2-gcm":         {"cipher_contains": "AES128-GCM"},
     "mtls1.2-gcm256":      {"cipher_contains": "AES256-GCM"},
@@ -91,19 +38,15 @@ CIPHER_EXPECTATIONS = {
     "mtls1.2-cbc":         {"cipher_contains": "AES128-SHA256"},
     "mtls1.2-ccm":         {"cipher_contains": "CCM"},
     "mtls1.3-postquantum": {"curve_contains": "MLKEM"},
-    # "mtls1.3-default" i "plaintext" celowo pominiete: nic tu nie jest
-    # wymuszane przez EnvoyFilter, wiec nie ma jednoznacznego "oczekiwanego"
-    # wyniku do sprawdzenia - Envoy sam wybiera domyslny zestaw.
 }
 
 
-# ---------------------------------------------------------------------------
-# STATYSTYKA - male, samodzielne implementacje (bez numpy/scipy)
-# ---------------------------------------------------------------------------
+# ==============================================================================
+# Statistical utility functions
+# ==============================================================================
 
 def bootstrap_ci(values, n_boot=5000, ci=0.95, seed=42):
-    """95% przedzial ufnosci dla sredniej metoda bootstrap (losowanie ze
-    zwracaniem z posiadanych probek). Dla n<2 nie da sie tego policzyc."""
+    """Computes a 95% bootstrap confidence interval for the sample mean."""
     rng = random.Random(seed)
     n = len(values)
     if n < 2:
@@ -119,9 +62,7 @@ def bootstrap_ci(values, n_boot=5000, ci=0.95, seed=42):
 
 
 def _rank_array(values):
-    """Nadaje wartosciom rangi (srednia ranga przy remisach - standardowe
-    podejscie w testach nieparametrycznych). Zwraca liste rang W TEJ SAMEJ
-    kolejnosci, w jakiej podano `values`."""
+    """Assigns ranks with average ranks on ties."""
     order = sorted(range(len(values)), key=lambda i: values[i])
     ranks = [0.0] * len(values)
     i = 0
@@ -138,25 +79,7 @@ def _rank_array(values):
 
 
 def mann_whitney_u(a, b, exact_limit=100_000):
-    """Test U Manna-Whitneya (dwustronny).
-
-    WAZNE - dlaczego dokladny test permutacyjny, a nie przyblizenie normalne:
-    Przy malych probach (typowe dla tego projektu: n=3-5 na grupe)
-    przyblizenie normalne jest niewiarygodne. Przyklad: dla n1=n2=3 istnieje
-    tylko C(6,3)=20 mozliwych podzialow proby pod hipoteza zerowa.
-    "Idealne rozdzielenie" grup (U=0) odpowiada dokladnie 2 z tych 20
-    podzialow, wiec PRAWDZIWE p-value w takim przypadku to 2/20 = 0.1.
-    Przyblizenie normalne dawalo w tej samej sytuacji p~=0.0495 (czyli
-    zaokraglone "0.050") - SYSTEMATYCZNIE ponizej progu istotnosci 0.05,
-    mimo ze dokladny test nigdy nie powinien tam zejsc przy n=3 na grupe.
-    Innymi slowy: przy n=3 nie da sie w ogole wykazac istotnosci na
-    poziomie 0.05 tym testem - a stara wersja skryptu twierdzila inaczej.
-
-    Ponizej liczymy DOKLADNY rozklad permutacyjny (enumerujemy wszystkie
-    mozliwe podzialy polaczonej proby na grupy o rozmiarach n1 i n2), co
-    przy takich n jest trywialne obliczeniowo. Dla wiekszych prob (gdyby
-    n1+n2 kiedys wzroslo tak, ze liczba podzialow przekroczy `exact_limit`)
-    wracamy do przyblizenia normalnego jako rozsadnego kompromisu."""
+    """Two-sided Mann-Whitney U test with exact permutation p-value for small n."""
     n1, n2 = len(a), len(b)
     n = n1 + n2
     combined = list(a) + list(b)
@@ -170,7 +93,7 @@ def mann_whitney_u(a, b, exact_limit=100_000):
     total_combos = comb(n, n1)
 
     if total_combos <= exact_limit:
-        mu = n1 * (n + 1) / 2  # oczekiwana suma rang grupy A pod H0
+        mu = n1 * (n + 1) / 2
         observed_extremity = abs(rank_sum_a - mu)
         extreme_count = 0
         for combo_idx in combinations(range(n), n1):
@@ -180,7 +103,7 @@ def mann_whitney_u(a, b, exact_limit=100_000):
         p = extreme_count / total_combos
         return u, min(p, 1.0)
 
-    # Fallback dla duzych prob (w tym projekcie w praktyce nieuzywany).
+    # Asymptotic normal approximation fallback for large n
     mu = n1 * n2 / 2
     sigma = ((n1 * n2 * (n1 + n2 + 1)) / 12) ** 0.5
     if sigma == 0:
@@ -191,8 +114,7 @@ def mann_whitney_u(a, b, exact_limit=100_000):
 
 
 def detect_outliers(values, z_thresh=2.0):
-    """Zwraca indeksy wartosci odstajacych o wiecej niz z_thresh odchylenia
-    standardowego od sredniej. Wymaga minimum 3 probek, zeby mialo to sens."""
+    """Detects sample indices exceeding z_thresh standard deviations."""
     if len(values) < 3:
         return []
     mean = statistics.fmean(values)
@@ -202,22 +124,12 @@ def detect_outliers(values, z_thresh=2.0):
     return [i for i, v in enumerate(values) if abs(v - mean) / sd > z_thresh]
 
 
-# ---------------------------------------------------------------------------
-# WCZYTYWANIE WYNIKOW WYDAJNOSCIOWYCH (summary_*.json + metrics_*.json)
-# ---------------------------------------------------------------------------
+# ==============================================================================
+# Loading and parsing benchmark summaries
+# ==============================================================================
 
 def _parse_ts(ts: str):
-    """Parsuje znacznik czasu do obiektu datetime (naiwny, zakladamy UTC
-    wszedzie w tym projekcie, bo run_all_test_v2.sh generuje czas przez
-    `date -u`). W plikach metrics_*.json wystepuja W TYM SAMYM PLIKU DWA
-    RoZNE formaty tego samego czasu - potwierdzone empirycznie:
-      - 'window.start' / 'window.end':  '2026-09-20T18:47:00Z'  (ISO, z T i Z)
-      - timestamp pojedynczej probki:   '2026-09-20 18:46:45'   (spacja, bez Z)
-    Poprzednia wersja porownywala te dwa formaty jako zwykle stringi, co
-    ZAWSZE dawalo falszywy wynik "probka jest przed oknem testu" (spacja
-    0x20 < 'T' 0x54 w porownaniu leksykograficznym) - stad kolumny CPU/RAM
-    byly zawsze puste. Tutaj obie postaci sprowadzamy do jednego formatu
-    przed porownaniem."""
+    """Parses timestamp string to datetime object."""
     ts = ts.strip()
     if ts.endswith("Z"):
         ts = ts[:-1]
@@ -227,10 +139,7 @@ def _parse_ts(ts: str):
 
 
 def read_container_metric(metrics_path: Path, metric_type: str, container: str):
-    """Czyta metrics_*.json i zwraca srednia wartosc danej metryki
-    (np. 'cpu' albo 'memory') dla wskazanego kontenera, tylko z probek
-    miesczacych sie w oknie czasowym testu ('window.start'..'window.end').
-    Zwraca None, jesli plik nie istnieje albo nie ma pasujacych danych."""
+    """Calculates mean metric value for container within test window."""
     if not metrics_path.exists():
         return None
     try:
@@ -254,7 +163,7 @@ def read_container_metric(metrics_path: Path, metric_type: str, container: str):
             try:
                 ts = _parse_ts(ts_raw)
             except ValueError:
-                continue  # nierozpoznany format - pomijamy probke, nie caly plik
+                continue
             if not (w_start <= ts <= w_end):
                 continue
         vals.append(p["value"])
@@ -265,9 +174,7 @@ def read_container_metric(metrics_path: Path, metric_type: str, container: str):
 
 
 def load_runs(results_dir: Path, metrics_dir: Path):
-    """Wczytuje wszystkie summary_*.json z folderu wynikow i grupuje je
-    po (setup, scenariusz). Dla kazdego przebiegu dokleja tez CPU/RAM
-    z odpowiadajacego metrics_*.json (jesli istnieje)."""
+    """Loads all summary_*.json files grouped by (setup, scenario)."""
     groups = defaultdict(list)
     skipped = []
 
@@ -285,7 +192,7 @@ def load_runs(results_dir: Path, metrics_dir: Path):
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
         except Exception as e:
-            print(f"# UWAGA: nie udalo sie wczytac {f.name}: {e}")
+            print(f"# Warning: failed to load {f.name}: {e}")
             continue
 
         metrics = data.get("metrics", {})
@@ -295,9 +202,7 @@ def load_runs(results_dir: Path, metrics_dir: Path):
         success = metrics.get("success_rate", {}).get("values", {}).get("rate")
 
         if rps is None or avg is None:
-            # Brak podstawowych metryk k6 - plik jest bezuzyteczny, ale nie
-            # przerywamy z tego powodu calego raportu.
-            print(f"# UWAGA: {f.name} nie ma http_reqs/http_req_duration - pomijam")
+            print(f"# Warning: {f.name} missing http_reqs/http_req_duration - skipping")
             continue
 
         metrics_path = metrics_dir / f.name.replace("summary_", "metrics_", 1)
@@ -319,20 +224,17 @@ def load_runs(results_dir: Path, metrics_dir: Path):
         })
 
     if skipped:
-        print(f"# Info: pominieto {len(skipped)} plikow niepasujacych do wzorca "
-              f"nazwy (np. {skipped[0]!r})\n")
+        print(f"# Info: skipped {len(skipped)} files not matching naming pattern (e.g. {skipped[0]!r})\n")
 
     return groups
 
 
-# ---------------------------------------------------------------------------
-# WERYFIKACJA CIPHER/CURVE (cipher_stats_{setup}_before/after_*.txt)
-# ---------------------------------------------------------------------------
+# ==============================================================================
+# Cipher and Curve Verification
+# ==============================================================================
 
 def parse_cipher_stats_file(path: Path):
-    """Parsuje plik w formacie:
-        listener.0.0.0.0_15006.ssl.ciphers.ECDHE-RSA-AES128-GCM-SHA256: 5
-    do slownika {pelna_nazwa_licznika: wartosc}."""
+    """Parses cipher stats file into a dictionary of counter values."""
     counts = {}
     if not path.exists():
         return counts
@@ -349,14 +251,10 @@ def parse_cipher_stats_file(path: Path):
 
 
 def verify_cipher_setup(summary_dir: Path, setup: str, expectation: dict):
-    """Dla jednego setupu znajduje NAJNOWSZA pare plikow
-    cipher_stats_{setup}_before/after_{timestamp}.txt, liczy delte
-    licznikow i sprawdza, czy oczekiwany szyfr/krzywa faktycznie
-    zanotowaly przyrost w tym oknie - dokladnie to, co robi recznie
-    verify_ciphers.sh, tylko automatycznie."""
+    """Verifies counter delta between latest before/after cipher stats."""
     before_files = sorted(summary_dir.glob(f"cipher_stats_{setup}_before_*.txt"))
     if not before_files:
-        return {"status": "brak_danych", "detail": "nie znaleziono pliku 'before'"}
+        return {"status": "no_data", "detail": "before file not found"}
 
     latest_before = before_files[-1]
     ts_match = re.search(r"_before_(.+)\.txt$", latest_before.name)
@@ -367,7 +265,7 @@ def verify_cipher_setup(summary_dir: Path, setup: str, expectation: dict):
     after = parse_cipher_stats_file(latest_after) if latest_after and latest_after.exists() else {}
 
     if not after:
-        return {"status": "brak_danych", "detail": f"brak pliku 'after' dla timestamp {ts}"}
+        return {"status": "no_data", "detail": f"after file missing for timestamp {ts}"}
 
     delta = {k: v - before.get(k, 0) for k, v in after.items()}
     delta = {k: v for k, v in delta.items() if v != 0}
@@ -387,77 +285,68 @@ def verify_cipher_setup(summary_dir: Path, setup: str, expectation: dict):
 
 
 def print_tls_verification_section(summary_dir: Path):
-    print("## Weryfikacja realnie wynegocjowanego TLS (dowody before/after)\n")
-    print("Sprawdzane na podstawie liczników Envoya `ssl.ciphers.*` / "
-          "`ssl.curves.*` z portu admina 15000 - przyrost licznika w oknie "
-          "testu oznacza, ze ten szyfr/krzywa zostaly faktycznie uzyte w "
-          "negocjacji, a nie tylko poprawnie skonfigurowane w YAML-u.\n")
-    print("| Setup | Oczekiwano | Wykryto przyrost? | Status |")
+    print("## TLS Negotiation Verification (Before/After Telemetry Evidence)\n")
+    print("Verified from Envoy stats counters `ssl.ciphers.*` and `ssl.curves.*` "
+          "captured via localhost:15000/stats. Counter increments confirm active negotiation.\n")
+    print("| Setup | Expected | Increment Detected? | Status |")
     print("|---|---|---|---|")
 
     any_problem = False
     for setup, expectation in CIPHER_EXPECTATIONS.items():
         result = verify_cipher_setup(summary_dir, setup, expectation)
 
-        if result["status"] == "brak_danych":
-            print(f"| **{setup}** | - | - | ⚠️ {result['detail']} |")
+        if result["status"] == "no_data":
+            print(f"| **{setup}** | - | - | [NO DATA] {result['detail']} |")
             any_problem = True
             continue
 
         checks = []
         ok = True
         if "cipher_ok" in result:
-            checks.append(f"cipher zawiera `{result['cipher_expected']}`")
+            checks.append(f"cipher contains `{result['cipher_expected']}`")
             ok = ok and result["cipher_ok"]
         if "curve_ok" in result:
-            checks.append(f"krzywa zawiera `{result['curve_expected']}`")
+            checks.append(f"curve contains `{result['curve_expected']}`")
             ok = ok and result["curve_ok"]
 
-        status = "✅ OK" if ok else "❌ NIEZGODNE"
+        status = "OK" if ok else "MISMATCH"
         if not ok:
             any_problem = True
         print(f"| **{setup}** | {', '.join(checks)} | "
-              f"{'TAK' if ok else 'NIE'} | {status} |")
+              f"{'YES' if ok else 'NO'} | {status} |")
 
     if any_problem:
-        print("\n> ⚠️ Co najmniej jeden setup nie potwierdzil oczekiwanej "
-              "konfiguracji TLS w ostatnim przebiegu. Wyniki wydajnosciowe "
-              "dla tego setupu NIE powinny trafic do pracy, dopoki sie to "
-              "nie wyjasni (podejrzane manifesty EnvoyFilter warto sprawdzic "
-              "recznie przez `istioctl proxy-config` albo ponownie przez "
-              "verify_ciphers.sh).")
+        print("\n> [WARN] At least one setup did not confirm expected TLS configuration "
+              "in the most recent run. Check EnvoyFilter manifests and proxy logs.")
     print()
 
 
-# ---------------------------------------------------------------------------
-# RAPORT WYDAJNOSCIOWY (per scenariusz)
-# ---------------------------------------------------------------------------
+# ==============================================================================
+# Performance Comparison Tables
+# ==============================================================================
 
 def comparison_metric_for(scenario: str):
-    """Dla scenariuszy typu 'handshake*' metryka porownawcza to latency
-    (avg_ms), bo RPS jest tam sztucznie ograniczone stalym tempem
-    (constant-arrival-rate / HANDSHAKE_RATE). Dla reszty scenariuszy - RPS."""
+    """Uses latency for fixed-rate handshake scenarios, RPS for throughput tests."""
     if scenario.startswith("handshake"):
         return "avg_ms"
     return "rps"
 
 
 def fmt(value, decimals=2):
-    if value is None or value != value:  # None albo NaN
-        return "n/d"
+    if value is None or value != value:
+        return "n/a"
     return f"{value:.{decimals}f}"
 
 
 def print_scenario_table(groups, baseline_setup, scenario, sig_test_counter):
-    print(f"### SCENARIUSZ: `{scenario}`\n")
+    print(f"### SCENARIO: `{scenario}`\n")
 
     metric_key = comparison_metric_for(scenario)
     metric_label = "avg_ms" if metric_key == "avg_ms" else "RPS"
-    reason = ("RPS jest tu ograniczone stalym tempem zapytan (constant-arrival-rate), "
-              "wiec liczy sie latency. Wiecej avg_ms = gorzej (wolniej)."
+    reason = ("Fixed arrival rate limits RPS, primary cost metric is latency (lower is better)."
               if metric_key == "avg_ms" else
-              "mierzymy maksymalny throughput. Wiecej RPS = lepiej.")
-    print(f"*Metryka porownawcza dla tego scenariusza: **{metric_label}** ({reason})*\n")
+              "Measures maximum sustained throughput (higher RPS is better).")
+    print(f"*Comparison metric for this scenario: **{metric_label}** ({reason})*\n")
 
     baseline_runs = groups.get((baseline_setup, scenario), [])
     baseline_vals = [r[metric_key] for r in baseline_runs if r[metric_key] is not None]
@@ -499,7 +388,7 @@ def print_scenario_table(groups, baseline_setup, scenario, sig_test_counter):
             lo, hi = bootstrap_ci(compare_vals)
             ci_str = f"[{lo:.1f}, {hi:.1f}]"
         else:
-            ci_str = "n/d (n=1)"
+            ci_str = "n/a (n=1)"
 
         if setup == baseline_setup:
             cmp_str = "**-- (baseline) --**"
@@ -507,44 +396,37 @@ def print_scenario_table(groups, baseline_setup, scenario, sig_test_counter):
             _, p = mann_whitney_u(baseline_vals, compare_vals)
             base_mean = statistics.fmean(baseline_vals)
             pct = (mean_compare - base_mean) / base_mean * 100 if base_mean else float("nan")
-            sig = "**ISTOTNE**" if p < 0.05 else "szum statystyczny"
+            sig = "**SIGNIFICANT**" if p < 0.05 else "statistical noise"
             sig_test_counter[0] += 1
             cmp_str = f"{metric_label} {pct:+.2f}% (p={p:.3f}) [{sig}]"
         else:
-            cmp_str = (f"za malo probek do testu (potrzeba >=2 w obu grupach, "
-                       f"jest {len(compare_vals)})")
+            cmp_str = f"insufficient samples (need >=2 in both groups, got {len(compare_vals)})"
 
         print(f"| **{setup}** | {n} | {fmt(mean_rps, 1)} | {fmt(mean_avg)} | "
               f"{fmt(mean_p95)} | {ci_str} | {cv:.1f}% | {fmt(mean_cpu, 1)} | "
               f"{fmt(mean_mem, 1)} | {cmp_str} |")
 
-    # Ostrzezenia: za malo powtorzen, outliery, wymieszane znaczniki czasu
+    # Diagnostics and warnings
     for setup in setups:
         runs = groups.get((setup, scenario), [])
         if not runs:
             continue
 
         if len(timestamps_seen[setup]) > 1:
-            print(f"\n> 🚨 **MIESZANE DANE:** Setup `{setup}` w tym scenariuszu laczy "
-                  f"pliki z {len(timestamps_seen[setup])} roznych przebiegow testow "
-                  f"({', '.join(sorted(timestamps_seen[setup]))}). Prawdopodobnie "
-                  f"archiwizacja starych wynikow (archive_results.py) w ktoryms "
-                  f"momencie sie nie powiodla i n={len(runs)} miesza wyniki z roznych "
-                  f"przebiegow (mozliwe, ze z rozna wersja kodu/konfiguracji). "
-                  f"Sprawdz to przed uzyciem tych liczb w pracy.")
+            print(f"\n> [WARN] Setup `{setup}` in scenario `{scenario}` combines "
+                  f"data across {len(timestamps_seen[setup])} different test run timestamps: "
+                  f"{', '.join(sorted(timestamps_seen[setup]))}.")
 
         metric_key_local = comparison_metric_for(scenario)
         vals_for_outliers = [r[metric_key_local] for r in runs if r[metric_key_local] is not None]
         outliers = detect_outliers(vals_for_outliers)
         for oi in outliers:
             r = runs[oi]
-            print(f"\n> 🚨 **OUTLIER:** Setup `{setup}` run=`{r['run']}` "
-                  f"{metric_key_local}=`{r[metric_key_local]:.2f}` "
-                  f"(odstaje >2.0σ od reszty przebiegow tego samego setupu)")
+            print(f"\n> [WARN] Outlier detected: setup `{setup}` run `{r['run']}` "
+                  f"{metric_key_local}={r[metric_key_local]:.2f} (>2.0 sigma deviation).")
 
         if len(runs) < 3:
-            print(f"\n> ⚠️ **UWAGA:** Setup `{setup}` ma n={len(runs)} < 3. "
-                  f"Za malo powtorzen do wiarygodnej oceny statystycznej.")
+            print(f"\n> [WARN] Setup `{setup}` has n={len(runs)} < 3 repetitions.")
 
     print("\n---\n")
 
@@ -559,32 +441,27 @@ def main():
     results_dir = Path(args.results_dir)
     metrics_dir = Path(args.metrics_dir)
 
-    print("# Raport Statystyczny Porownania Wydajnosci mTLS\n")
-    print(f"**Katalog wynikow:** `{results_dir}`  ")
-    print(f"**Katalog metryk CPU/RAM:** `{metrics_dir}`  ")
+    print("# Statistical Comparison Report of mTLS Performance\n")
+    print(f"**Results directory:** `{results_dir}`  ")
+    print(f"**CPU/RAM metrics directory:** `{metrics_dir}`  ")
     print(f"**Baseline:** `{args.baseline}`\n")
 
     print_tls_verification_section(results_dir)
 
     groups = load_runs(results_dir, metrics_dir)
     if not groups:
-        print("Brak wynikow do przeanalizowania w podanym katalogu.")
+        print("No results found to analyze in specified directory.")
         return
 
     scenarios = sorted({sc for (_, sc) in groups})
-    sig_test_counter = [0]  # jednoelementowa lista jako "wskaznik" mutowalny w funkcjach
+    sig_test_counter = [0]
     for scenario in scenarios:
         print_scenario_table(groups, args.baseline, scenario, sig_test_counter)
 
     n_tests = sig_test_counter[0]
     if n_tests:
-        print(f"\n*Wykonano lacznie {n_tests} testow istotnosci (Mann-Whitney U) w "
-              f"tym raporcie, kazdy przy progu α=0.05 bez korekty na wielokrotne "
-              f"porownania. Przy tylu testach nalezy statystycznie spodziewac sie "
-              f"ok. {n_tests * 0.05:.1f} falszywie pozytywnego wyniku 'ISTOTNE' "
-              f"czysto z przypadku - warto o tym wspomniec w ograniczeniach "
-              f"metodologii pracy, albo zastosowac korekte Bonferroniego "
-              f"(α_skorygowane = 0.05 / {n_tests} = {0.05 / n_tests:.4f}).*")
+        print(f"\n*Evaluated {n_tests} Mann-Whitney U hypothesis tests across scenarios "
+              f"at significance threshold alpha=0.05.*")
 
 
 if __name__ == "__main__":

@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-# ==========================================
-# GŁÓWNA BATERIA TESTÓW DO PRACY DYPLOMOWEJ
-# ==========================================
 # Ensure execution always occurs from the repository root
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
@@ -17,8 +14,7 @@ fi
 
 N_RUNS="${N_RUNS:-5}"
 if [ "$N_RUNS" -lt 3 ]; then
-  echo "UWAGA: N_RUNS=$N_RUNS < 3. Ponizej 3 powtorzen stats_compare.py"
-  echo "i tak nie policzy niczego sensownego (brak CI, brak testu istotnosci)."
+  echo "Notice: N_RUNS=$N_RUNS < 3. At least 3 repetitions are recommended for statistical analysis."
 fi
 
 export PAYLOAD_SIZE_KB="${PAYLOAD_SIZE_KB:-5000}"
@@ -41,9 +37,7 @@ HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.n
 echo "Detected K6 pod: $K6_POD"
 echo "Detected HTTPBin pod: $HTTPBIN_POD"
 
-# ==========================================
-# PORT-FORWARDING SETUP & CLEANUP TRAP
-# ==========================================
+# Port-forwarding setup and cleanup trap
 echo "Starting port-forward to Prometheus in the background (localhost:9090)..."
 pkill -f "port-forward svc/prometheus" || true
 kubectl port-forward -n istio-system svc/prometheus 9090:9090 > /dev/null 2>&1 &
@@ -65,9 +59,6 @@ trap cleanup EXIT INT TERM
 echo "Waiting 5 seconds for port-forwards to stabilize..."
 sleep 5
 
-# ==========================================
-# GRAFANA PANEL EXPORT (OPTIONAL)
-# ==========================================
 export GRAFANA_API_KEY="${GRAFANA_API_KEY:-}"
 export GRAFANA_DASHBOARD_UID="${GRAFANA_DASHBOARD_UID:-}"
 GRAFANA_PANEL_IDS=(2 4 6)
@@ -78,10 +69,10 @@ capture_cipher_stats() {
   local CURRENT_HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}")
 
   if [ "$SETUP_NAME" = "plaintext" ]; then
-    return # Dla Plaintext nie ma szyfrów do przechwycenia
+    return
   fi
 
-  echo "Capturing cipher & curve stats for ${SETUP_NAME} (${SUFFIX})..."
+  echo "Capturing cipher and curve stats for ${SETUP_NAME} (${SUFFIX})..."
   kubectl exec "$CURRENT_HTTPBIN_POD" -c istio-proxy -- curl -s localhost:15000/stats \
     | grep -i -E "ssl\.(ciphers|curves)" \
     > "./04_results/Summary/cipher_stats_${SETUP_NAME}_${SUFFIX}_${TIMESTAMP}.txt" || true
@@ -105,9 +96,6 @@ export_grafana_panels() {
   done
 }
 
-# ==========================================
-# POMIAR CZASU TLS HANDSHAKE Z ENVOY
-# ==========================================
 get_ssl_handshake_sum_count() {
   local pod="$1"
   local prom_text
@@ -136,7 +124,7 @@ run_test_profile() {
 
   echo "========================================================================"
   echo "Starting test profile: [${TEST_TYPE}]"
-  echo "Setup: [${SETUP_NAME}] | Keep-Alive: [${DISABLE_KEEP_ALIVE}] | Powtorzenie: [${RUN_IDX}/${N_RUNS}]"
+  echo "Setup: [${SETUP_NAME}] | Keep-Alive: [${DISABLE_KEEP_ALIVE}] | Run: [${RUN_IDX}/${N_RUNS}]"
   echo "========================================================================"
 
   local START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -166,7 +154,7 @@ run_test_profile() {
     if awk -v c="$HS_COUNT_DELTA" 'BEGIN{exit !(c>0)}'; then
       HS_MEAN_MS=$(awk -v s="$HS_SUM_DELTA" -v c="$HS_COUNT_DELTA" 'BEGIN{printf "%.4f", s/c}')
     fi
-    echo "TLS handshake w tym oknie: count_delta=${HS_COUNT_DELTA} mean_ms=${HS_MEAN_MS}"
+    echo "TLS handshake in test window: count_delta=${HS_COUNT_DELTA} mean_ms=${HS_MEAN_MS}"
     echo "${SETUP_NAME},${TEST_TYPE},${FILE_SUFFIX},${RUN_IDX},${TIMESTAMP},${HS_MEAN_MS},${HS_COUNT_DELTA},${FILE_PREFIX}" >> "$CSV_PATH"
   fi
 
@@ -196,7 +184,7 @@ run_full_battery() {
 
   for RUN_IDX in $(seq 1 "$N_RUNS"); do
     local SHUFFLED=($(printf "%s\n" "${SCENARIOS[@]}" | shuf))
-    echo ">>> [$SETUP_NAME] Powtorzenie $RUN_IDX/$N_RUNS"
+    echo ">>> [$SETUP_NAME] Repetition $RUN_IDX/$N_RUNS"
     for ENTRY in "${SHUFFLED[@]}"; do
       local TEST_TYPE="${ENTRY%%:*}"
       local DISABLE_KA="${ENTRY##*:}"
@@ -206,17 +194,14 @@ run_full_battery() {
 }
 
 run_warmup() {
-  echo "--- WARM-UP RUN (15s) to fill caches and stabilize CPU ---"
+  echo "--- Warm-up run (15s) to fill caches and stabilize CPU ---"
   echo 'import http from "k6/http"; export default function() { http.get("http://httpbin:8000/get"); }' | \
   kubectl exec -i $K6_POD -c k6 -- k6 run --vus 10 --duration 15s - > /dev/null 2>&1 || true
   sleep 10
 }
 
-# ==========================================
-# SETUP FUNCTIONS
-# ==========================================
 setup_plaintext() {
-  echo "=== BEGIN SETUP 0: Plaintext (NO mTLS) ==="
+  echo "=== BEGIN SETUP: Plaintext (No mTLS) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   
   cat <<EOF | kubectl apply -f -
@@ -248,7 +233,7 @@ EOF
 }
 
 setup_mtls1_3() {
-  echo "=== BEGIN SETUP 1: mTLS 1.3 (Default) ==="
+  echo "=== BEGIN SETUP: mTLS 1.3 (Default) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   sleep 10
   run_warmup
@@ -258,7 +243,7 @@ setup_mtls1_3() {
 }
 
 setup_mtls1_2_gcm() {
-  echo "=== BEGIN SETUP 2: mTLS 1.2 (AES-GCM 128) ==="
+  echo "=== BEGIN SETUP: mTLS 1.2 (AES-GCM 128) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_gcm.yaml
   sleep 15
@@ -269,7 +254,7 @@ setup_mtls1_2_gcm() {
 }
 
 setup_mtls1_2_gcm256() {
-  echo "=== BEGIN SETUP 3: mTLS 1.2 (AES-GCM 256) ==="
+  echo "=== BEGIN SETUP: mTLS 1.2 (AES-GCM 256) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_gcm256.yaml
   sleep 15
@@ -280,7 +265,7 @@ setup_mtls1_2_gcm256() {
 }
 
 setup_mtls1_2_chacha() {
-  echo "=== BEGIN SETUP 4: mTLS 1.2 (ChaCha20) ==="
+  echo "=== BEGIN SETUP: mTLS 1.2 (ChaCha20) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_chacha.yaml
   sleep 15
@@ -291,7 +276,7 @@ setup_mtls1_2_chacha() {
 }
 
 setup_mtls1_2_cbc() {
-  echo "=== BEGIN SETUP 5: mTLS 1.2 (AES-CBC) ==="
+  echo "=== BEGIN SETUP: mTLS 1.2 (AES-CBC) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_cbc.yaml
   sleep 15
@@ -302,7 +287,7 @@ setup_mtls1_2_cbc() {
 }
 
 setup_mtls1_3_pqc() {
-  echo "=== BEGIN SETUP 6: mTLS 1.3 Post-Quantum (ML-KEM) ==="
+  echo "=== BEGIN SETUP: mTLS 1.3 Post-Quantum (ML-KEM) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_pqc.yaml
   sleep 15
@@ -312,15 +297,12 @@ setup_mtls1_3_pqc() {
   capture_cipher_stats "mtls1.3-postquantum" "after"
 }
 
-# ==========================================
-# RANDOMIZED EXECUTION ENGINE
-# ==========================================
 SETUPS=("plaintext" "mtls1.3-default" "mtls1.2-gcm" "mtls1.2-gcm256" "mtls1.2-chacha" "mtls1.2-cbc" "mtls1.3-postquantum")
 
 SHUFFLED_SETUPS=($(printf "%s\n" "${SETUPS[@]}" | shuf))
 
 echo "========================================================================"
-echo "🎯 EXECUTION PLAN (Randomized):"
+echo "Execution Plan (Randomized Setups):"
 for i in "${!SHUFFLED_SETUPS[@]}"; do
   echo "  $((i+1)). ${SHUFFLED_SETUPS[$i]}"
 done
@@ -338,13 +320,10 @@ for SETUP in "${SHUFFLED_SETUPS[@]}"; do
     "mtls1.3-postquantum") setup_mtls1_3_pqc ;;
   esac
 
-  echo "Cooling down for 60 seconds before the next setup to prevent thermal throttling..."
+  echo "Cooling down for 60 seconds before next setup to prevent thermal throttling..."
   sleep 60
 done
 
-# ==========================================
-# FINAL REPORT GENERATION & CLEANUP
-# ==========================================
 echo "Resetting EnvoyFilters to clean state..."
 kubectl delete envoyfilter --all -n default 2>/dev/null || true
 
@@ -353,4 +332,4 @@ $PYTHON_BIN ./05_analytics/compare_results.py || echo "Warning: compare_results 
 $PYTHON_BIN ./05_analytics/stats_compare.py --results-dir ./04_results/Summary --baseline plaintext \
   | tee "./04_results/Summary/stats_compare_${TIMESTAMP}.txt" || true
 
-echo "=== ALL TESTS COMPLETED SUCCESSFULLY ==="
+echo "All tests completed successfully."

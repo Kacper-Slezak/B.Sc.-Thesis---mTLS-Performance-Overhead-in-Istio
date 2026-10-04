@@ -23,6 +23,14 @@ The benchmarks evaluate cryptographic overhead across two orthogonal axes: **Inf
 
 ### Step-by-Step Execution Guide
 
+**Option A — Complete End-to-End Workflow (One-Click):**
+Run the automated pipeline to provision cluster, verify ciphers, execute basic benchmarks, and launch Grafana:
+```bash
+./start.sh
+```
+
+**Option B — Phased Granular Execution:**
+
 1. **Initialize Cluster & Service Mesh:**
    Run the setup script once at the start of testing:
    ```bash

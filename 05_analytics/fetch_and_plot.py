@@ -128,7 +128,7 @@ def main():
         json.dump(metrics_data, f, indent=2, default=str)
     print(f"Saved raw prometheus metrics to {metrics_log_path}")
 
-    # 4. Read K6 Latency points (PANCERNE STRUMIENIOWANIE LINIA PO LINII - 0% RYZYKA OOM)
+    # 4. Read K6 Latency points (stream line-by-line to prevent memory exhaustion)
     k6_raw_path = f"./04_results/RawLogs/raw_{args.prefix}.json"
     df_k6 = pd.DataFrame()
     
@@ -140,7 +140,7 @@ def main():
                 if not line.strip():
                     continue
                 try:
-                    # Szybka weryfikacja tekstowa przed pełnym parse'owaniem JSON
+                    # Fast text filter before full JSON parse
                     if '"metric":"http_req_duration"' in line and '"type":"Point"' in line:
                         record = json.loads(line)
                         k6_data_points.append({
@@ -157,7 +157,7 @@ def main():
 
     print(f"Successfully loaded {len(df_k6)} http_req_duration points from k6 raw log.")
 
-    # Downsampling dla renderowania wykresu punktowego
+    # Downsample points for scatter plot rendering
     MAX_PLOT_POINTS = 20000
     if len(df_k6) > MAX_PLOT_POINTS:
         df_k6_plot = df_k6.sample(n=MAX_PLOT_POINTS, random_state=42).sort_values('timestamp')
@@ -172,14 +172,14 @@ def main():
     main_title = f"Profile: {args.setup.upper()} | Test: {args.test_type.upper()}\nTime Window: {args.start} to {args.end}"
     fig.suptitle(main_title, fontsize=16, fontweight='bold')
 
-    # Panel 1: Latency Over Time (WYDAJNE RYSOWANIE MATPLOTLIB)
+    # Panel 1: Latency Over Time (matplotlib rendering)
     if not df_k6.empty:
         sns.scatterplot(data=df_k6_plot, x='timestamp', y='duration_ms', alpha=0.3, ax=axes[0, 0], color='#1f77b4', edgecolor=None)
         
         df_k6_sorted = df_k6.sort_values('timestamp')
         df_k6_sorted['rolling_mean'] = df_k6_sorted['duration_ms'].rolling(window=100, min_periods=10).mean()
         
-        # Bezpieczna linia bez wewnętrznego próbkowania statystycznego Seaborna
+        # Direct line plot avoiding seaborn bootstrap estimation
         axes[0, 0].plot(df_k6_sorted['timestamp'], df_k6_sorted['rolling_mean'], color='darkblue', linewidth=2, label='Rolling Mean (100 req)')
         
         axes[0, 0].set_title('Latency Over Time (K6)')

@@ -203,12 +203,12 @@ def summarize(groups, baseline_setup):
                     outliers_found = True
                 for oi in outliers:
                     r = runs[oi]
-                    print(f"> 🚨 **OUTLIER:** Setup `{setup}` run=`{r['run']}` RPS=`{r['rps']:.1f}` (odstaje >2.0σ od reszty)")
+                    print(f"> **OUTLIER:** Setup `{setup}` run=`{r['run']}` RPS=`{r['rps']:.1f}` (>2.0 std dev from mean)")
             if len(runs) < 3:
                 if not outliers_found:
                     print("\n")
                     outliers_found = True
-                print(f"> ⚠️ **UWAGA:** Setup `{setup}` ma n={len(runs)} < 3. Za mało powtórzeń do poprawnej oceny statystycznej.")
+                print(f"> **WARNING:** Setup `{setup}` has n={len(runs)} < 3. Insufficient runs for statistical validity.")
         print("\n---")
 
 def main():
@@ -220,8 +220,8 @@ def main():
     results_dir = Path(args.results_dir)
     groups = load_runs(results_dir)
     
-    print(f"# Raport Statystyczny Porównania Wydajności mTLS\n")
-    print(f"**Katalog wyników:** `{results_dir}`\n**Baseline:** `{args.baseline}`\n")
+    print(f"# mTLS Performance Statistical Comparison Report\n")
+    print(f"**Results Directory:** `{results_dir}`\n**Baseline:** `{args.baseline}`\n")
     
     summarize(groups, args.baseline)
 

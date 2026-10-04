@@ -8,7 +8,7 @@ SUMMARY_DIR = './04_results/Summary'
 METRICS_DIR = './04_results/Metrics'
 OUTPUT_REPORT = './04_results/comparison_report.md'
 
-# Dodano 'plaintext' do listy sprawdzanych konfiguracji
+# Configuration setups and traffic scenarios
 SETUPS = ['plaintext', 'mtls1.3-default', 'mtls1.2-gcm', 'mtls1.2-chacha', 'mtls1.2-cbc', 'mtls1.3-postquantum']
 SCENARIOS = ['baseline', 'baseline-nokeepalive', 'payload', 'payload-nokeepalive', 'stress']
 
@@ -114,7 +114,7 @@ def generate_report():
     report.append(f"# Performance Comparison Report")
     report.append(f"Generated for test run: `{timestamp}`\n")
     report.append("This report compares the performance of different mutual TLS configurations in Istio:\n")
-    report.append("- **Plaintext**: Zwykly ruch HTTP (brak mTLS)")
+    report.append("- **Plaintext**: Plain HTTP traffic (no mTLS)")
     report.append("- **mTLS 1.3 (Default)**: TLS_AES_256_GCM_SHA384 (Default Istio cipher suite)")
     report.append("- **mTLS 1.2 (AES-GCM)**: ECDHE-ECDSA-AES128-GCM-SHA256")
     report.append("- **mTLS 1.2 (ChaCha20)**: ECDHE-ECDSA-CHACHA20-POLY1305-SHA256")
@@ -128,7 +128,7 @@ def generate_report():
             continue
         delta = load_cipher_delta(setup, timestamp)
         if not delta:
-            report.append(f"- **{setup}**: Brak nowych handshake'ów lub brakuje zrzutu /stats (test mógł zostać przerwany skrótem ^C).")
+            report.append(f"- **{setup}**: No new handshakes recorded or /stats snapshot missing (test might have been interrupted).")
             continue
         any_proof_found = True
         parts = ", ".join(f"`{k.split('.')[-1] if '.' in k else k}`={v}" for k, v in sorted(delta.items()))
@@ -151,14 +151,14 @@ def generate_report():
         baseline_data = {}
         
         for setup in SETUPS:
-            # Rozwiązywanie plików z patternem _run*_ obsługującym strukturę z run_all_test.sh
+            # Resolve summary files matching the _run* pattern
             search_pattern = os.path.join(SUMMARY_DIR, f"summary_{setup}_{scenario}_run*_{timestamp}.json")
             matching_files = glob.glob(search_pattern)
             
             if not matching_files:
                 continue
                 
-            # Pobieramy pierwszy run do tabeli z podsumowaniem ogólnym
+            # Use the first run for the overview summary table
             summary_path = sorted(matching_files)[0]
             filename = os.path.basename(summary_path)
             metrics_filename = filename.replace('summary_', 'metrics_')
@@ -199,7 +199,7 @@ def generate_report():
             rows.append(data)
             
         if not rows:
-            report.append("*Brak danych dla tego scenariusza.*\n")
+            report.append("*No data available for this scenario.*\n")
             continue
             
         table_header = "| " + " | ".join(headers) + " |"

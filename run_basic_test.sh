@@ -6,22 +6,19 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || cd "$(dirname "${BASH_
 cd "$REPO_ROOT"
 
 # ==============================================================================
-# BATERIA TESTÓW PODSTAWOWYCH (BASIC) DO PRACY DYPLOMOWEJ
+# Thesis baseline benchmark suite
 # ==============================================================================
-# Oparta na architekturze run_all_test_v2.sh.
-# Zamiast pełnego zestawu scenariuszy (payload, stress, handshake), skrypt
-# uruchamia z main_k6_scenarios.js wyłącznie testy podstawowe:
-#   1. baseline             (Keep-Alive włączone, 100 VU)
-#   2. baseline-nokeepalive (Keep-Alive wyłączone: Connection: close, maxRequests=1)
+# Runs two core scenarios from main_k6_scenarios.js across all cryptographic setups:
+#   1. baseline             (HTTP Keep-Alive enabled, 100 VU)
+#   2. baseline-nokeepalive (HTTP Keep-Alive disabled: Connection: close, maxRequests=1)
 # ==============================================================================
 
 N_RUNS="${N_RUNS:-5}"
 if [ "$N_RUNS" -lt 3 ]; then
-  echo "UWAGA: N_RUNS=$N_RUNS < 3. Poniżej 3 powtórzeń stats_compare.py"
-  echo "i tak nie policzy niczego sensownego (brak CI, brak testu istotności)."
+  echo "Notice: N_RUNS=$N_RUNS < 3. At least 3 repetitions are recommended for confidence intervals."
 fi
 
-# Wykrywanie interpretera Python ze środowiska wirtualnego jeśli istnieje
+# Detect python from virtual environment if present
 if [ -f "./.venv/bin/python3" ]; then
   PYTHON_BIN="./.venv/bin/python3"
 else
@@ -44,22 +41,38 @@ K6_POD=$(kubectl get pods -l app=k6 -o jsonpath="{.items[0].metadata.name}" 2>/d
 HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}" 2>/dev/null || true)
 
 if [ -z "$K6_POD" ] || [ -z "$HTTPBIN_POD" ]; then
-  echo "BŁĄD: Nie znaleziono podów k6 lub httpbin! Upewnij się, że klaster k8s działa (np. uruchom ./start.sh)."
-  exit 1
+  echo "Warning: Active k6 or httpbin pods not found."
+  echo "Checking cluster status..."
+  if ! kubectl cluster-info >/dev/null 2>&1; then
+    echo "Error: Kubernetes cluster is not running or not responding."
+    echo "Hint: Run './start.sh' to initialize the environment and run tests,"
+    echo "      or run './01_scripts/setup_cluster.sh' to set up the cluster."
+    exit 1
+  else
+    echo "Cluster is running. Waiting for pods to become ready (up to 60s)..."
+    kubectl wait --for=condition=ready pod -l app=httpbin --timeout=60s 2>/dev/null || true
+    kubectl wait --for=condition=ready pod -l app=k6 --timeout=60s 2>/dev/null || true
+    K6_POD=$(kubectl get pods -l app=k6 -o jsonpath="{.items[0].metadata.name}" 2>/dev/null || true)
+    HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}" 2>/dev/null || true)
+    if [ -z "$K6_POD" ] || [ -z "$HTTPBIN_POD" ]; then
+      echo "Error: Pods are not ready. Run './01_scripts/setup_cluster.sh' or './start.sh'."
+      exit 1
+    fi
+  fi
 fi
 
 echo "Detected K6 pod: $K6_POD"
 echo "Detected HTTPBin pod: $HTTPBIN_POD"
 
 # ==========================================
-# PORT-FORWARDING SETUP & CLEANUP TRAP
+# Port-forwarding setup and cleanup trap
 # ==========================================
-echo "Starting port-forward to Prometheus in the background (localhost:9090)..."
+echo "Starting port-forward to Prometheus in background (localhost:9090)..."
 pkill -f "port-forward svc/prometheus" || true
 kubectl port-forward -n istio-system svc/prometheus 9090:9090 > /dev/null 2>&1 &
 PROM_PF_PID=$!
 
-echo "Starting port-forward to Grafana in the background (localhost:3000)..."
+echo "Starting port-forward to Grafana in background (localhost:3000)..."
 pkill -f "port-forward svc/grafana" || true
 kubectl port-forward -n istio-system svc/grafana 3000:3000 > /dev/null 2>&1 &
 GRAFANA_PF_PID=$!
@@ -76,9 +89,7 @@ trap cleanup EXIT INT TERM
 echo "Waiting 5 seconds for port-forwards to stabilize..."
 sleep 5
 
-# ==========================================
-# GRAFANA PANEL EXPORT (OPTIONAL)
-# ==========================================
+# Optional Grafana panel image export
 export GRAFANA_API_KEY="${GRAFANA_API_KEY:-}"
 export GRAFANA_DASHBOARD_UID="${GRAFANA_DASHBOARD_UID:-}"
 GRAFANA_PANEL_IDS=(2 4 6)
@@ -89,10 +100,10 @@ capture_cipher_stats() {
   local CURRENT_HTTPBIN_POD=$(kubectl get pods -l app=httpbin -o jsonpath="{.items[0].metadata.name}")
 
   if [ "$SETUP_NAME" = "plaintext" ]; then
-    return # Dla Plaintext nie ma szyfrów do przechwycenia
+    return
   fi
 
-  echo "Capturing cipher & curve stats for ${SETUP_NAME} (${SUFFIX})..."
+  echo "Capturing cipher and curve stats for ${SETUP_NAME} (${SUFFIX})..."
   kubectl exec "$CURRENT_HTTPBIN_POD" -c istio-proxy -- curl -s localhost:15000/stats \
     | grep -i -E "ssl\.(ciphers|curves)" \
     > "./04_results/Summary/cipher_stats_${SETUP_NAME}_${SUFFIX}_${TIMESTAMP}.txt" || true
@@ -116,9 +127,7 @@ export_grafana_panels() {
   done
 }
 
-# ==========================================
-# POMIAR CZASU TLS HANDSHAKE Z ENVOY
-# ==========================================
+# Measure Envoy TLS handshake sum and count
 get_ssl_handshake_sum_count() {
   local pod="$1"
   local prom_text
@@ -147,7 +156,7 @@ run_test_profile() {
 
   echo "========================================================================"
   echo "Starting test profile: [${TEST_TYPE}]"
-  echo "Setup: [${SETUP_NAME}] | Keep-Alive: [${DISABLE_KEEP_ALIVE}] | Powtórzenie: [${RUN_IDX}/${N_RUNS}]"
+  echo "Setup: [${SETUP_NAME}] | Keep-Alive: [${DISABLE_KEEP_ALIVE}] | Run: [${RUN_IDX}/${N_RUNS}]"
   echo "========================================================================"
 
   local START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -175,7 +184,7 @@ run_test_profile() {
     if awk -v c="$HS_COUNT_DELTA" 'BEGIN{exit !(c>0)}'; then
       HS_MEAN_MS=$(awk -v s="$HS_SUM_DELTA" -v c="$HS_COUNT_DELTA" 'BEGIN{printf "%.4f", s/c}')
     fi
-    echo "TLS handshake w tym oknie: count_delta=${HS_COUNT_DELTA} mean_ms=${HS_MEAN_MS}"
+    echo "TLS handshake in test window: count_delta=${HS_COUNT_DELTA} mean_ms=${HS_MEAN_MS}"
     echo "${SETUP_NAME},${TEST_TYPE},${FILE_SUFFIX},${RUN_IDX},${TIMESTAMP},${HS_MEAN_MS},${HS_COUNT_DELTA},${FILE_PREFIX}" >> "$CSV_PATH"
   fi
 
@@ -199,16 +208,13 @@ run_test_profile() {
   sleep 5
 }
 
-# ==============================================================================
-# BATERIA BASIC: TYLKO BASELINE I BASELINE-NOKEEPALIVE
-# ==============================================================================
 run_full_battery() {
   local SETUP_NAME=$1
   local SCENARIOS=("baseline:false" "baseline:true")
 
   for RUN_IDX in $(seq 1 "$N_RUNS"); do
     local SHUFFLED=($(printf "%s\n" "${SCENARIOS[@]}" | shuf))
-    echo ">>> [$SETUP_NAME] Powtórzenie $RUN_IDX/$N_RUNS"
+    echo ">>> [$SETUP_NAME] Repetition $RUN_IDX/$N_RUNS"
     for ENTRY in "${SHUFFLED[@]}"; do
       local TEST_TYPE="${ENTRY%%:*}"
       local DISABLE_KA="${ENTRY##*:}"
@@ -218,17 +224,17 @@ run_full_battery() {
 }
 
 run_warmup() {
-  echo "--- WARM-UP RUN (15s) to fill caches and stabilize CPU ---"
+  echo "--- Warm-up run (15s) to populate caches and stabilize proxy CPU ---"
   echo 'import http from "k6/http"; export default function() { http.get("http://httpbin:8000/get"); }' | \
   kubectl exec -i $K6_POD -c k6 -- k6 run --vus 10 --duration 15s - > /dev/null 2>&1 || true
   sleep 10
 }
 
 # ==========================================
-# SETUP FUNCTIONS
+# Setup configuration functions
 # ==========================================
 setup_plaintext() {
-  echo "=== BEGIN SETUP 0: Plaintext (NO mTLS) ==="
+  echo "=== BEGIN SETUP: Plaintext (No mTLS) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   
   cat <<EOF | kubectl apply -f -
@@ -260,7 +266,7 @@ EOF
 }
 
 setup_mtls1_3() {
-  echo "=== BEGIN SETUP 1: mTLS 1.3 (Default) ==="
+  echo "=== BEGIN SETUP: mTLS 1.3 (Default AES-GCM) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   sleep 10
   run_warmup
@@ -270,7 +276,7 @@ setup_mtls1_3() {
 }
 
 setup_mtls1_2_gcm() {
-  echo "=== BEGIN SETUP 2: mTLS 1.2 (AES-GCM 128) ==="
+  echo "=== BEGIN SETUP: mTLS 1.2 (AES-128-GCM) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_gcm.yaml
   sleep 15
@@ -281,7 +287,7 @@ setup_mtls1_2_gcm() {
 }
 
 setup_mtls1_2_gcm256() {
-  echo "=== BEGIN SETUP 3: mTLS 1.2 (AES-GCM 256) ==="
+  echo "=== BEGIN SETUP: mTLS 1.2 (AES-256-GCM) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_gcm256.yaml
   sleep 15
@@ -292,7 +298,7 @@ setup_mtls1_2_gcm256() {
 }
 
 setup_mtls1_2_chacha() {
-  echo "=== BEGIN SETUP 4: mTLS 1.2 (ChaCha20) ==="
+  echo "=== BEGIN SETUP: mTLS 1.2 (ChaCha20-Poly1305) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_chacha.yaml
   sleep 15
@@ -303,7 +309,7 @@ setup_mtls1_2_chacha() {
 }
 
 setup_mtls1_2_cbc() {
-  echo "=== BEGIN SETUP 5: mTLS 1.2 (AES-CBC) ==="
+  echo "=== BEGIN SETUP: mTLS 1.2 (AES-128-CBC-SHA256) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_cbc.yaml
   sleep 15
@@ -314,7 +320,7 @@ setup_mtls1_2_cbc() {
 }
 
 setup_mtls1_3_pqc() {
-  echo "=== BEGIN SETUP 6: mTLS 1.3 Post-Quantum (ML-KEM) ==="
+  echo "=== BEGIN SETUP: mTLS 1.3 Post-Quantum (ML-KEM-768 hybrid) ==="
   kubectl delete envoyfilter --all -n default 2>/dev/null || true
   kubectl apply -f ./02_manifests/envoyfilter_pqc.yaml
   sleep 15
@@ -325,7 +331,7 @@ setup_mtls1_3_pqc() {
 }
 
 # ==========================================
-# EXECUTION ENGINE
+# Execution engine
 # ==========================================
 DEFAULT_SETUPS=("plaintext" "mtls1.3-default" "mtls1.2-gcm" "mtls1.2-gcm256" "mtls1.2-chacha" "mtls1.2-cbc" "mtls1.3-postquantum")
 
@@ -341,7 +347,7 @@ fi
 SHUFFLED_SETUPS=($(printf "%s\n" "${SETUPS[@]}" | shuf))
 
 echo "========================================================================"
-echo "🎯 BASIC EXECUTION PLAN (Randomized):"
+echo "Basic Execution Plan (Randomized Setup Order):"
 for i in "${!SHUFFLED_SETUPS[@]}"; do
   echo "  $((i+1)). ${SHUFFLED_SETUPS[$i]}"
 done
@@ -358,18 +364,18 @@ for SETUP in "${SHUFFLED_SETUPS[@]}"; do
     "mtls1.2-cbc")         setup_mtls1_2_cbc ;;
     "mtls1.3-postquantum") setup_mtls1_3_pqc ;;
     *)
-      echo "Ostrzeżenie: Nieznany setup '$SETUP', pomijam."
+      echo "Warning: Unknown setup '$SETUP', skipping."
       ;;
   esac
 
-  echo "Cooling down for 60 seconds before the next setup to prevent thermal throttling..."
+  echo "Cooling down for 60 seconds before next setup..."
   sleep 60
 done
 
 # ==========================================
-# FINAL REPORT GENERATION & CLEANUP
+# Final report generation and cleanup
 # ==========================================
-echo "Resetting EnvoyFilters to clean state..."
+echo "Resetting EnvoyFilters to default clean state..."
 kubectl delete envoyfilter --all -n default 2>/dev/null || true
 
 echo "Generating comparison reports..."
@@ -377,4 +383,4 @@ $PYTHON_BIN ./05_analytics/compare_results.py || echo "Warning: compare_results 
 $PYTHON_BIN ./05_analytics/stats_compare.py --results-dir ./04_results/Summary --metrics-dir ./04_results/Metrics --baseline plaintext \
   | tee "./04_results/Summary/stats_compare_${TIMESTAMP}.md" || true
 
-echo "=== BASIC TESTS COMPLETED SUCCESSFULLY ==="
+echo "Basic tests completed successfully."

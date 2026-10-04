@@ -12,7 +12,7 @@ REPORT_FILE="./04_results/Summary/pqc_failure_report_${TIMESTAMP}.txt"
 mkdir -p ./04_results/Summary
 
 echo "========================================================================" | tee -a "$REPORT_FILE"
-echo "🔬 AUTOMATED PQC FAILURE REPRODUCTION EXPERIMENT" | tee -a "$REPORT_FILE"
+echo "AUTOMATED PQC FAILURE REPRODUCTION EXPERIMENT" | tee -a "$REPORT_FILE"
 echo "========================================================================" | tee -a "$REPORT_FILE"
 
 K6_POD=$(kubectl get pods -l app=k6 -o jsonpath="{.items[0].metadata.name}")
@@ -103,5 +103,5 @@ kubectl delete envoyfilter --all -n default > /dev/null 2>&1 || true
 istioctl pc log "$K6_POD" --level warning > /dev/null
 
 echo "========================================================================" | tee -a "$REPORT_FILE"
-echo "✅ Experiment complete. Evidence saved to: $REPORT_FILE"
+echo "Experiment complete. Evidence saved to: $REPORT_FILE"
 echo "========================================================================"

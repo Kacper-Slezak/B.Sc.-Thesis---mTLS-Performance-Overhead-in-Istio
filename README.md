@@ -4,8 +4,9 @@
 
 All scripts and results are organized systematically as follows:
 
-* `run_basic_test.sh` - Główna, oficjalna bateria testów podstawowych dla pracy dyplomowej (izolacja narzutu Keep-Alive vs No-KeepAlive dla wszystkich konfiguracji kryptograficznych).
-* `test_trying/` - Eksploracyjne baterie testów (pełne 6 scenariuszy obciążeniowych w `run_all_test_v2.sh`, pipeline `start.sh`, archiwalne wersje próbne).
+* `start.sh` - Main end-to-end runner: verifies/provisions cluster (k3d + Istio), validates negotiated ciphers, executes basic benchmark battery, and launches Grafana.
+* `run_basic_test.sh` - Main basic test suite for the thesis (isolates Keep-Alive vs No-KeepAlive overhead across all cryptographic configurations).
+* `test_trying/` - Exploratory load test suites (6 complete benchmark profiles in `run_all_test_v2.sh`, experimental scripts, and archive).
 * `00_journal/` - Research journal, empirical experiment observations (e.g. ML-KEM enforcement analysis), and thesis outline notes.
 * `01_scripts/` - Bash scripts automating cluster provisioning (`setup_cluster.sh`), cipher verification (`verify_ciphers.sh`), mesh diagnostics (`diag_mesh.sh`, `diag_envoyfilter_config.sh`), and PQC scans (`run_pqc_test.sh`, `reproduce_pqc_failure.sh`).
 * `02_manifests/` - Kubernetes and Istio configurations (EnvoyFilters forcing specific ciphers, DestinationRules disabling keep-alive).
@@ -22,16 +23,15 @@ To reproduce the research from scratch:
 3. Run the complete automated workflow or individual phases:
 
    ```bash
-   # Phase 1: Cluster & Mesh Provisioning
-   ./01_scripts/setup_cluster.sh
+   # Complete automated end-to-end workflow:
+   ./start.sh
    
-   # Phase 2: Cipher & Curve Verification
-   ./01_scripts/verify_ciphers.sh
+   # Or run individual phases manually:
+   ./01_scripts/setup_cluster.sh      # Phase 1: Cluster and Istio provisioning
+   ./01_scripts/verify_ciphers.sh     # Phase 2: Cipher suite verification
+   N_RUNS=5 ./run_basic_test.sh       # Phase 3: Benchmark battery execution
    
-   # Phase 3: Core Thesis Benchmarks (Baseline Keep-Alive vs No-KeepAlive)
-   N_RUNS=5 ./run_basic_test.sh
-   
-   # (Optional) Full Exploratory Test Battery (Stress, Payload, Handshake trials)
+   # Optional: Extended exploratory load testing (stress / payload trials)
    N_RUNS=3 ./test_trying/run_all_test_v2.sh
    ```
 
@@ -117,7 +117,7 @@ The test was a complete failure (0% 200 OK status, 100% of requests failed).
     checks_total.......: 14979   496.005612/s
     checks_succeeded...: 0.00%   0 out of 14979
     checks_failed......: 100.00% 14979 out of 14979
-    ✗ status is 200
+    X status is 200
 ```
 
 *(Result file: `04_results/Archive/summary_light_hacked_client.json`)*

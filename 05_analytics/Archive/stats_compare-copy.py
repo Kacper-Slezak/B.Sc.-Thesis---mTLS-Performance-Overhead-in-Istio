@@ -80,10 +80,10 @@ def stat_compare(base_vals, test_vals):
     test_mean = np.mean(test_vals)
     diff_pct = ((test_mean - base_mean) / base_mean) * 100
     
-    # Test T-Studenta dla dwóch prób niezależnych
+    # Two-sample independent t-test
     _, p_val = stats.ttest_ind(base_vals, test_vals, equal_var=False)
     
-    sig = "**ISTOTNE**" if p_val < 0.05 else "szum"
+    sig = "**SIGNIFICANT**" if p_val < 0.05 else "noise"
     return f"{diff_pct:+.1f}% ({sig})"
 
 def main():
@@ -94,13 +94,13 @@ def main():
 
     timestamp = get_latest_timestamp()
     if not timestamp:
-        print("Brak wyników do analizy.")
+        print("No results to analyze.")
         return
 
-    print(f"# Pełny Raport Statystyczny (RPS, CPU, Latency)\n**Timestamp:** `{timestamp}`\n**Baseline:** `{args.baseline}`\n")
+    print(f"# Full Statistical Report (RPS, CPU, Latency)\n**Timestamp:** `{timestamp}`\n**Baseline:** `{args.baseline}`\n")
     
     for scenario in SCENARIOS:
-        print(f"### SCENARIUSZ: `{scenario}`\n")
+        print(f"### SCENARIO: `{scenario}`\n")
         print("| Setup | n | RPS mean | Proxy CPU (m) | Latency Avg (ms) | Δ RPS | Δ CPU | Δ Latency |")
         print("|---|---|---|---|---|---|---|---|")
         
@@ -118,7 +118,7 @@ def main():
             cpu_mean = np.mean(cpu) if cpu else 0.0
             
             if setup == args.baseline:
-                print(f"| **{setup}** | {n_runs} | {rps_mean:.1f} | {cpu_mean:.1f} | {lat_mean:.2f} | - (baza) | - (baza) | - (baza) |")
+                print(f"| **{setup}** | {n_runs} | {rps_mean:.1f} | {cpu_mean:.1f} | {lat_mean:.2f} | - (baseline) | - (baseline) | - (baseline) |")
             else:
                 rps_cmp = stat_compare(base_rps, rps)
                 lat_cmp = stat_compare(base_lat, lat)
