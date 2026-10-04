@@ -2,7 +2,7 @@
 set -e
 
 # Ensure execution always occurs from the repository root
-REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || (cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd))"
 cd "$REPO_ROOT"
 
 # Detect Python interpreter (use venv if available)
