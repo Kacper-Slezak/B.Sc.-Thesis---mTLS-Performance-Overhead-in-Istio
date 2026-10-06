@@ -100,6 +100,8 @@ def analyze_results():
         lat_avg = safe_get(metrics, 'http_req_duration.values.avg', 0.0)
         lat_p95 = safe_get(metrics, 'http_req_duration.values.p(95)', 0.0)
 
+        hs_mean_ms = safe_get(metrics, 'envoy_tls_handshake_ms_mean.values.value', None)
+
         # Dopasowanie pliku metryk Prometheus dla tego samego uruchomienia
         metrics_fname = fname.replace('summary_', 'metrics_')
         metrics_fpath = os.path.join(METRICS_DIR, metrics_fname)
@@ -110,6 +112,7 @@ def analyze_results():
             'rps': rps,
             'lat_avg': lat_avg,
             'lat_p95': lat_p95,
+            'hs_mean_ms': hs_mean_ms,
             'proxy_cpu': proxy_cpu,
             'proxy_mem': proxy_mem
         })
@@ -137,6 +140,7 @@ def analyze_results():
             "Średnie opóźnienie [ms]",
             "Zmiana opóźnienia (%)",
             "Opóźnienie P95 [ms]",
+            "Handshake TLS [ms]",
             "CPU Proxy [m]"
         ]
         lines.append("| " + " | ".join(headers) + " |")
@@ -185,6 +189,9 @@ def analyze_results():
                 rps_diff_str = "n/a"
                 lat_diff_str = "n/a"
 
+            hs_vals = [r['hs_mean_ms'] for r in runs if r.get('hs_mean_ms') is not None]
+            avg_hs_str = f"{sum(hs_vals)/len(hs_vals):.3f}" if hs_vals else "-"
+
             row = [
                 f"**{s}**",
                 str(n),
@@ -193,6 +200,7 @@ def analyze_results():
                 f"{avg_lat:.2f}",
                 lat_diff_str,
                 f"{avg_p95:.2f}",
+                avg_hs_str,
                 avg_cpu_str
             ]
             lines.append("| " + " | ".join(row) + " |")

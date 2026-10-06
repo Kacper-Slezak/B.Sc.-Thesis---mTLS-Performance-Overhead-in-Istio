@@ -177,10 +177,10 @@ run_test_profile() {
 
   read -r HS_SUM_AFTER HS_COUNT_AFTER <<< "$(get_ssl_handshake_sum_count "$CURRENT_HTTPBIN_POD")"
   
+  local HS_MEAN_MS="n/a"
   if [ "$SETUP_NAME" != "plaintext" ]; then
     local HS_COUNT_DELTA=$(awk -v a="$HS_COUNT_AFTER" -v b="$HS_COUNT_BEFORE" 'BEGIN{printf "%f", a-b}')
     local HS_SUM_DELTA=$(awk -v a="$HS_SUM_AFTER" -v b="$HS_SUM_BEFORE" 'BEGIN{printf "%f", a-b}')
-    local HS_MEAN_MS="n/a"
     if awk -v c="$HS_COUNT_DELTA" 'BEGIN{exit !(c>0)}'; then
       HS_MEAN_MS=$(awk -v s="$HS_SUM_DELTA" -v c="$HS_COUNT_DELTA" 'BEGIN{printf "%.4f", s/c}')
     fi
@@ -197,7 +197,14 @@ run_test_profile() {
   echo "Downloading results..."
   kubectl exec $K6_POD -c k6 -- gzip -c /tmp/raw.json > ./04_results/RawLogs/raw_${FILE_PREFIX}.json.gz
   
-  kubectl exec $K6_POD -c k6 -- cat /tmp/summary.json > ./04_results/Summary/summary_${FILE_PREFIX}.json
+  kubectl exec $K6_POD -c k6 -- cat /tmp/summary.json > /tmp/temp_summary.json
+  
+  if [ "$SETUP_NAME" != "plaintext" ] && [ "$HS_MEAN_MS" != "n/a" ]; then
+    jq ".metrics += {\"envoy_tls_handshake_ms_mean\": {\"type\": \"gauge\", \"contains\": \"time\", \"values\": {\"value\": $HS_MEAN_MS}}}" /tmp/temp_summary.json > ./04_results/Summary/summary_${FILE_PREFIX}.json
+  else
+    cp /tmp/temp_summary.json ./04_results/Summary/summary_${FILE_PREFIX}.json
+  fi
+  rm -f /tmp/temp_summary.json
   
   kubectl exec $K6_POD -c k6 -- rm -f /tmp/raw.json /tmp/summary.json
 

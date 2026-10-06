@@ -12,7 +12,7 @@ REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || (cd "$(dirname "${BASH
 cd "$REPO_ROOT"
 
 TEST_SUITE="${TEST_SUITE:-basic}"
-N_RUNS="${N_RUNS:-5}"
+N_RUNS="${N_RUNS:-3}"
 SKIP_CLUSTER_SETUP="${SKIP_CLUSTER_SETUP:-false}"
 
 echo "========================================================================"

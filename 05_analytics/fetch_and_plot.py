@@ -7,12 +7,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# IMPORTANT: rate()/irate() windows must be at least ~4x your Prometheus
-# scrape_interval, or you get noisy/NaN results because there aren't enough
-# samples inside the window. Check your real scrape interval with:
-#   kubectl -n istio-system get cm prometheus-server -o yaml | grep scrape_interval
-SCRAPE_INTERVAL_SECONDS = 15
-RATE_WINDOW = f"{SCRAPE_INTERVAL_SECONDS * 4}s"
+
+RATE_WINDOW = "30s"
 
 # Query Prometheus API for range data
 def query_prometheus_range(query, start_time, end_time, step='2s'):
@@ -74,10 +70,10 @@ def main():
     end_dt = (pd.to_datetime(args.end) + pd.Timedelta(seconds=15)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     # 1. Fetch CPU Usage (millicores)
-    q_httpbin_app_cpu = f'sum(rate(container_cpu_usage_seconds_total{{namespace="default", container="httpbin", pod=~"httpbin-.*"}}[{RATE_WINDOW}])) * 1000'
-    q_httpbin_proxy_cpu = f'sum(rate(container_cpu_usage_seconds_total{{namespace="default", container="istio-proxy", pod=~"httpbin-.*"}}[{RATE_WINDOW}])) * 1000'
-    q_k6_app_cpu = f'sum(rate(container_cpu_usage_seconds_total{{namespace="default", container="k6", pod=~"k6-deploy-.*"}}[{RATE_WINDOW}])) * 1000'
-    q_k6_proxy_cpu = f'sum(rate(container_cpu_usage_seconds_total{{namespace="default", container="istio-proxy", pod=~"k6-deploy-.*"}}[{RATE_WINDOW}])) * 1000'
+    q_httpbin_app_cpu = f'sum(irate(container_cpu_usage_seconds_total{{namespace="default", container="httpbin", pod=~"httpbin-.*"}}[{RATE_WINDOW}])) * 1000'
+    q_httpbin_proxy_cpu = f'sum(irate(container_cpu_usage_seconds_total{{namespace="default", container="istio-proxy", pod=~"httpbin-.*"}}[{RATE_WINDOW}])) * 1000'
+    q_k6_app_cpu = f'sum(irate(container_cpu_usage_seconds_total{{namespace="default", container="k6", pod=~"k6-deploy-.*"}}[{RATE_WINDOW}])) * 1000'
+    q_k6_proxy_cpu = f'sum(irate(container_cpu_usage_seconds_total{{namespace="default", container="istio-proxy", pod=~"k6-deploy-.*"}}[{RATE_WINDOW}])) * 1000'
 
     res_hb_app_cpu = query_prometheus_range(q_httpbin_app_cpu, start_dt, end_dt)
     res_hb_proxy_cpu = query_prometheus_range(q_httpbin_proxy_cpu, start_dt, end_dt)
@@ -112,7 +108,7 @@ def main():
     df_mem = pd.concat(dfs_mem, ignore_index=True) if dfs_mem else pd.DataFrame(columns=['timestamp', 'value', 'container', 'pod', 'label'])
 
     # 3. Fetch TLS handshake rate
-    q_httpbin_tls_handshake_rate = f'sum(rate(envoy_listener_ssl_handshake{{namespace="default", pod=~"httpbin-.*"}}[{RATE_WINDOW}]))'
+    q_httpbin_tls_handshake_rate = f'sum(irate(envoy_listener_ssl_handshake{{namespace="default", pod=~"httpbin-.*"}}[{RATE_WINDOW}]))'
     res_hb_tls_handshake = query_prometheus_range(q_httpbin_tls_handshake_rate, start_dt, end_dt)
     df_hb_tls_handshake = result_to_df(res_hb_tls_handshake, 'httpbin-proxy')
 

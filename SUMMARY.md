@@ -70,15 +70,17 @@ Run the automated pipeline to provision cluster, verify ciphers, execute basic b
 2. **Key Telemetry Metrics:**
    - **Proxy CPU Consumption:**
      ```promql
-     sum(rate(container_cpu_usage_seconds_total{namespace="default", container="istio-proxy", pod=~"httpbin-.*"}[1m])) * 1000
+     sum(irate(container_cpu_usage_seconds_total{namespace="default", container="istio-proxy", pod=~"httpbin-.*"}[30s])) * 1000
      ```
    - **Application CPU Consumption:**
      ```promql
-     sum(rate(container_cpu_usage_seconds_total{namespace="default", container="httpbin", pod=~"httpbin-.*"}[1m])) * 1000
+     sum(irate(container_cpu_usage_seconds_total{namespace="default", container="httpbin", pod=~"httpbin-.*"}[30s])) * 1000
      ```
    - **TLS Handshake Rate:**
      ```promql
-     sum(rate(envoy_listener_ssl_handshake{namespace="default", pod=~"httpbin-.*"}[1m]))
+     sum(irate(envoy_listener_ssl_handshake{namespace="default", pod=~"httpbin-.*"}[30s]))
      ```
+   - **TLS Handshake Duration (ms):**
+     Captured from Envoy `/stats/prometheus` (`envoy_*_ssl_handshake_sum` / `count`) and injected directly into `summary_*.json` under `.metrics.envoy_tls_handshake_ms_mean`.
    - **Cipher & Curve Statistics:**
      Captured directly from the Envoy administrative interface at `localhost:15000/stats` filtered by `ssl.ciphers` and `ssl.curves`.

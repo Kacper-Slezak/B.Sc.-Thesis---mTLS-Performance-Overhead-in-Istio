@@ -143,7 +143,7 @@ def generate_report():
         headers = [
             "Setup", "RPS", "RPS Diff", 
             "Latency Avg (ms)", "Latency Diff", 
-            "Latency P95 (ms)", "TLS Handshakes (rate/s)", 
+            "Latency P95 (ms)", "TLS Handshake (ms)", "TLS Handshakes (rate/s)", 
             "Proxy CPU (m)", "App CPU (m)", "Proxy Mem (MB)"
         ]
         
@@ -176,6 +176,7 @@ def generate_report():
             rps = safe_get(metrics, 'http_reqs.values.rate', 0.0)
             lat_avg = safe_get(metrics, 'http_req_duration.values.avg', 0.0)
             lat_p95 = safe_get(metrics, 'http_req_duration.values.p(95)', 0.0)
+            handshake_ms = safe_get(metrics, 'envoy_tls_handshake_ms_mean.values.value', None)
             handshake_rate = calculate_avg_metric(metrics_path, 'tls_handshake_rate', 'httpbin-proxy')
             
             proxy_cpu = calculate_avg_metric(metrics_path, 'cpu', 'httpbin-proxy')
@@ -187,6 +188,7 @@ def generate_report():
                 'rps': rps,
                 'lat_avg': lat_avg,
                 'lat_p95': lat_p95,
+                'handshake_ms': handshake_ms,
                 'handshake_rate': handshake_rate,
                 'proxy_cpu': proxy_cpu,
                 'app_cpu': app_cpu,
@@ -224,6 +226,7 @@ def generate_report():
                     diff = ((row['lat_avg'] - b_lat) / b_lat) * 100
                     lat_diff_str = f"{diff:+.2f}%"
             
+            hs_str = f"{row['handshake_ms']:.3f}" if row.get('handshake_ms') is not None else "-"
             cells = [
                 f"**{setup}**",
                 f"{row['rps']:.2f}",
@@ -231,6 +234,7 @@ def generate_report():
                 f"{row['lat_avg']:.3f}",
                 lat_diff_str,
                 f"{row['lat_p95']:.3f}",
+                hs_str,
                 f"{row['handshake_rate']:.2f}",
                 f"{row['proxy_cpu']:.1f}",
                 f"{row['app_cpu']:.1f}",
